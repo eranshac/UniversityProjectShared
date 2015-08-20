@@ -13,7 +13,6 @@ public class Bar : MonoBehaviour {
 	
 	}
 	public float GetWidthOfBar(){
-		print (GetComponent<BoxCollider2D> ().size.x);
 		return GetComponent<BoxCollider2D>().size.x;
 
 	}

@@ -13,7 +13,12 @@ public class Ball : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision2D){
+	
+			Controller script = (Controller)GetComponent<Controller> ();
+			script.enabled = false;
+
 		rigidbody2d.gravityScale = 3;
+
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball") && isLanded==false ) {
 			this.isLanded=true;
 			GameGrid.InsertBallToGrid(this);
