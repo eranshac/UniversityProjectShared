@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class Controller : MonoBehaviour {
 
 	private Detector pitchDetector;						//Pitch detector object
-	
+	private Text SpeedDisplayToScreen;
+	private Text FrequencyDisplayToScreen;
+
 	private int minFreq, maxFreq; 						//Max and min frequencies window
 	public string selectedDevice { get; private set; }	//Mic selected
 	private bool micSelected = false;					//Mic flag
@@ -69,7 +71,9 @@ public class Controller : MonoBehaviour {
 	
 	//Start function for web player (also works on other platforms)
 	IEnumerator Start() {
-		
+		SpeedDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("SpeedText").GetComponent<Text>();
+		FrequencyDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("FrequencyText").GetComponent<Text>();
+
 		
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftmost = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
@@ -126,6 +130,7 @@ public class Controller : MonoBehaviour {
 		*/
 	
 	void Update () {
+		print ("listening: " + listening);
 		if (listening) {
 			audio.GetOutputData(data,0);
 			float sum = 0f;
@@ -134,6 +139,7 @@ public class Controller : MonoBehaviour {
 			float rmsValue = Mathf.Sqrt(sum/data.Length);
 			float dbValue = 20f*Mathf.Log10(rmsValue/refValue);
 			if(dbValue<minVolumeDB) {
+
 		
 				return;
 			}
@@ -141,18 +147,18 @@ public class Controller : MonoBehaviour {
 			pitchDetector.DetectPitch (data);
 			int midiant = pitchDetector.lastMidiNote ();
 			int midi = findMode();
-			//txt.text="Note: "+pitchDetector.lastFrequency();
 			float x=pitchDetector.lastFrequency();
 			detectionsMade [detectionPointer++] = midiant;
 			detectionPointer %= cumulativeDetections;
-			
+			print (x);
 			if (x>0){
-				speed=(x-250)/20;
+				speed=(x-220)/15;
+				DisplayOnScreen(speed,x);
+
+
 			}
-			print ("lastfrequancy :  " + x);
 
 			float WidthOfBar=bar.GetComponent<BoxCollider2D>().size.x;
-			print("width " + WidthOfBar);
 			transform.position+=Vector3.left*speed*Time.deltaTime;
 
 			transform.position= new Vector3 (Mathf.Clamp(transform.position.x,0+WidthOfBar,23.8f),transform.position.y,transform.position.z);
@@ -160,7 +166,6 @@ public class Controller : MonoBehaviour {
 			
 		}
 		else {
-		//	txt.text="Note: -";
 		}
 		
 		
@@ -277,7 +282,7 @@ public class Controller : MonoBehaviour {
 	}
 	
 	public void StartMicrophone () {
-		audio.clip = Microphone.Start(selectedDevice, true, 10, maxFreq);//Starts recording
+		audio.clip = Microphone.Start(selectedDevice, true, 20, maxFreq);//Starts recording
 		while (!(Microphone.GetPosition(selectedDevice) > 0)){} // Wait until the recording has started
 		audio.Play(); // Play the audio source!
 	}
@@ -306,5 +311,12 @@ public class Controller : MonoBehaviour {
 				moda=detectionsMade [i];
 		}
 		return moda;
+	}
+
+
+	void DisplayOnScreen (float speed, float x)
+	{
+		SpeedDisplayToScreen.text=speed.ToString();
+		FrequencyDisplayToScreen.text=x.ToString();
 	}
 }
