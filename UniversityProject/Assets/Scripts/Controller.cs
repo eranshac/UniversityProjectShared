@@ -7,13 +7,13 @@ using UnityEngine.UI;
 public class Controller : MonoBehaviour {
 
 	private Detector pitchDetector;						//Pitch detector object
-	private Text SpeedDisplayToScreen;
-	private Text FrequencyDisplayToScreen;
+
 
 	private int minFreq, maxFreq; 						//Max and min frequencies window
 	public string selectedDevice { get; private set; }	//Mic selected
 	private bool micSelected = false;					//Mic flag
-	
+	private Text ControllerPitchDisplayToScreen;
+
 	float[] data;										//Sound samples data
 	public int cumulativeDetections= 4; 				//Number of consecutive detections used to determine current note
 	int [] detectionsMade;								//Detections buffer
@@ -36,7 +36,7 @@ public class Controller : MonoBehaviour {
 	private int endMidiNote=86; 			
 	public float padding = 1f;
 	private float xmin=-138,xmax=138,speed;
-	public Bar bar;
+	public static float x;
 	//Lowst midi printable in score
 	//Conversion array from notes to positions. Minus indicates sharp note
 	//si do  do#  re  re#  mi  fa  fa# sol sol#  la  la#
@@ -71,10 +71,9 @@ public class Controller : MonoBehaviour {
 	
 	//Start function for web player (also works on other platforms)
 	IEnumerator Start() {
-		SpeedDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("SpeedText").GetComponent<Text>();
-		FrequencyDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("FrequencyText").GetComponent<Text>();
 
-		
+
+		ControllerPitchDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("FrequencyText").GetComponent<Text>();
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftmost = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 righttmost = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -130,7 +129,6 @@ public class Controller : MonoBehaviour {
 		*/
 	
 	void Update () {
-		print ("listening: " + listening);
 		if (listening) {
 			audio.GetOutputData(data,0);
 			float sum = 0f;
@@ -140,29 +138,18 @@ public class Controller : MonoBehaviour {
 			float dbValue = 20f*Mathf.Log10(rmsValue/refValue);
 			if(dbValue<minVolumeDB) {
 
-		
+				x=0;
 				return;
 			}
 			
 			pitchDetector.DetectPitch (data);
 			int midiant = pitchDetector.lastMidiNote ();
 			int midi = findMode();
-			float x=pitchDetector.lastFrequency();
+			x=pitchDetector.lastFrequency();
 			detectionsMade [detectionPointer++] = midiant;
 			detectionPointer %= cumulativeDetections;
-			print (x);
-			if (x>0){
-				speed=(x-220)/15;
-				DisplayOnScreen(speed,x);
+			ControllerPitchDisplayToScreen.text=x.ToString();
 
-
-			}
-
-			float WidthOfBar=bar.GetComponent<BoxCollider2D>().size.x;
-			transform.position+=Vector3.left*speed*Time.deltaTime;
-
-			transform.position= new Vector3 (Mathf.Clamp(transform.position.x,0+WidthOfBar,23.8f),transform.position.y,transform.position.z);
-			
 			
 		}
 		else {
@@ -185,6 +172,12 @@ public class Controller : MonoBehaviour {
 		
 		
 		
+		
+	}
+	public void MoveBallRight(Ball ball){
+
+	}
+	public void MoveBallLeft(Ball ball){
 		
 	}
 	
@@ -314,9 +307,5 @@ public class Controller : MonoBehaviour {
 	}
 
 
-	void DisplayOnScreen (float speed, float x)
-	{
-		SpeedDisplayToScreen.text=speed.ToString();
-		FrequencyDisplayToScreen.text=x.ToString();
-	}
+
 }
