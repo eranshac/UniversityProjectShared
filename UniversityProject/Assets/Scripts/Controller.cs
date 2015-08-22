@@ -90,7 +90,7 @@ public class Controller : MonoBehaviour {
 			GetMicCaps();
 			//Estimates bufer len, based on pitchTimeInterval value
 			int bufferLen = (int)Mathf.Round (AudioSettings.outputSampleRate * pitchTimeInterval / 1000f);
-			Debug.Log ("Buffer len: " + bufferLen);
+			//Debug.Log ("Buffer len: " + bufferLen);
 			data = new float[bufferLen];
 			
 			detectionsMade = new int[maxDetectionsAllowed]; //Allocates detection buffer

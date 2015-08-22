@@ -28,6 +28,7 @@ public class Spwaner : MonoBehaviour {
 		ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,4)];
 		ball.transform.parent = origin.transform;
 		
+		
 
 
 	}

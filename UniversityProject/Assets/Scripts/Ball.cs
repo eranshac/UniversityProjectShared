@@ -9,16 +9,19 @@ public class Ball : MonoBehaviour {
 	public Rigidbody2D rigidbody2d;
 	 float speed;
 	private Text BallPitchDisplayToScreen;
+	private Vector4 ballColor;
 	 void Start () {
 		rigidbody2d.velocity=new Vector3 (0,-3,0);
 		BallPitchDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("SpeedText").GetComponent<Text>();
+		ballColor = GetComponent<SpriteRenderer>().color;
 	}
 
 	void Update () {
+	
 		if (isLanded == false) {
 			float currentPitch=Controller.x ;
 			speed=0;
-			print ("currentPitch: "+ currentPitch+" speed: "+speed);
+			//print ("currentPitch: "+ currentPitch+" speed: "+speed);
 
 			if (currentPitch> 0) {
 				speed = (currentPitch - 220) / 15;
@@ -40,14 +43,29 @@ public class Ball : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision2D){
-	
+		GameGrid.UpdatetimeFromLastCollision(Time.deltaTime+Time.timeSinceLevelLoad);
 		rigidbody2d.gravityScale = 3;
-
+			print(Time.deltaTime);
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball") && isLanded==false ) {
-			this.isLanded=true;
+			this.isLanded=true;			
 			GameGrid.InsertBallToGrid(this);
-
 		}
 
 	}
+	
+	public Vector4 GetBallColor(){
+	
+	return ballColor;
+	
+	}
+	
+	public void UnLandBall(bool changeTo){
+		isLanded=changeTo;
+	
+	}
+	public bool GetIsLanded(){
+	return isLanded;
+	}
+
+	
 }
