@@ -8,11 +8,11 @@ public class Ball : MonoBehaviour {
 
 	public Rigidbody2D rigidbody2d;
 	 float speed;
-	private Text BallPitchDisplayToScreen;
+	
 	private Vector4 ballColor;
 	 void Start () {
 		rigidbody2d.velocity=new Vector3 (0,-3,0);
-		BallPitchDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("SpeedText").GetComponent<Text>();
+	
 		ballColor = GetComponent<SpriteRenderer>().color;
 	}
 
@@ -25,7 +25,7 @@ public class Ball : MonoBehaviour {
 
 			if (currentPitch> 0) {
 				speed = (currentPitch - 220) / 15;
-				DisplayOnScreen ( currentPitch);
+				
 
 			
 			}
@@ -37,15 +37,12 @@ public class Ball : MonoBehaviour {
 		}
 	
 	}
-	void DisplayOnScreen ( float x)
-	{
-		BallPitchDisplayToScreen.text=x.ToString();
-	}
+
 
 	void OnCollisionEnter2D(Collision2D collision2D){
-		GameGrid.UpdatetimeFromLastCollision(Time.deltaTime+Time.timeSinceLevelLoad);
+	
 		rigidbody2d.gravityScale = 3;
-			print(Time.deltaTime);
+			
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball") && isLanded==false ) {
 			this.isLanded=true;			
 			GameGrid.InsertBallToGrid(this);
