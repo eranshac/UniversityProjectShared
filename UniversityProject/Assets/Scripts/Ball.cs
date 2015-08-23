@@ -43,7 +43,7 @@ public class Ball : MonoBehaviour {
 	
 		rigidbody2d.gravityScale = 3;
 			
-		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball") && isLanded==false ) {
+		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
 			this.isLanded=true;			
 			GameGrid.InsertBallToGrid(this);
 		}
@@ -56,13 +56,7 @@ public class Ball : MonoBehaviour {
 	
 	}
 	
-	public void UnLandBall(bool changeTo){
-		isLanded=changeTo;
-	
-	}
-	public bool GetIsLanded(){
-	return isLanded;
-	}
+
 
 	
 }

@@ -6,23 +6,20 @@ public class GameGrid : MonoBehaviour {
 	public int numberOfColoumns;
 	private static int numberOfPipes=12, NumberOfRowes=8;
 	public static Spwaner spwaner;
-	private static bool foundSequence=false;
-	private static bool checkingForSequence=false;
+	private static int countCallForCheck=0;
 	private static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
 	private static int x,y;
 	private static Vector4 color;
-	private static Vector2[] checkForSequanceArray= new Vector2[99999];
-	private static int currentPosInArray=0;
+
 	
 	
 
 	void Start () {
 	
-	for(int i=0;i<checkForSequanceArray.Length;i++){
-			checkForSequanceArray[i]=new Vector2(-1,-1);
+
 	
-	}
-		spwaner = FindObjectOfType<Spwaner> ();
+	
+		
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
 		numberOfColoumns = barInstance.transform.childCount;
 		
@@ -30,11 +27,7 @@ public class GameGrid : MonoBehaviour {
 
 
 	void Update(){
-		print (checkForSequanceArray[currentPosInArray].x);
-		if(checkingForSequence==false && checkForSequanceArray[currentPosInArray].x>-1){
-		
-		CheckForSequence();
-		}
+	
 	
 	}
 
@@ -42,25 +35,16 @@ public class GameGrid : MonoBehaviour {
 		//int x = (int)GridX-1
 		
 		
-		checkingForSequence=true;
+
 		
-		x=(int) checkForSequanceArray[currentPosInArray].x;
-		y=(int) checkForSequanceArray[currentPosInArray].y;
+		
 		CheckForColumn();
 		CheckForRow();
 		
-		checkingForSequence=false;
-		currentPosInArray++;
+		countCallForCheck--;
+	
 	}
-	
-	
 
-	
-	
-	
-
-	
-	
 	public static void InsertBallToGrid(Ball ball){
 
 		float ballRadius = ball.GetComponent<CircleCollider2D>().radius;
@@ -72,28 +56,19 @@ public class GameGrid : MonoBehaviour {
 		grid[x, y] = ball;
 		
 		color=ball.GetBallColor();
-		int i=0;
-		if(Time.timeSinceLevelLoad>2){
-		while(checkForSequanceArray[i].x>-1){
-		
-		i++;
-		
-		}
-		checkForSequanceArray[i]=new Vector2(x,y);
-		print ("x = " + x);
-		}
-				spwaner.RandomlySpwanBalls();
-			
-			//ChangeAllBallsLandBool(true);
 	
-			//print ("ok");	
+		CanCheck();
 		
 		
 	}
 
-	private void NextBall(){
-
-
+	private static void CanCheck(){
+		if(countCallForCheck>0){
+			CanCheck();
+		}else{
+			countCallForCheck++;
+			CheckForSequence();
+		}
 	}
 
 	public Spwaner GetSpwaner(){
@@ -103,41 +78,63 @@ public class GameGrid : MonoBehaviour {
 	
 	
 	private static void CheckForColumn(){
+			
+		int up=CheckUp();
+		int down= 	CheckDown();
 	
-	int count =1;
-	
-		while (y-count>=0 && grid[x,y-count].GetBallColor()==color){
-			count++;
-	
-		}
-		if(count >=4){
-			foundSequence=true;
-			ChangeAllBallsLandBool(false,y);
-			for (int i = 0; i < count; i++)
+		if(down+up >=4){
+			
+			
+			for (int i = 0; i < down; i++)
 			{
-				print("Destroy " +  (i+1));
-				//print ("is Landed " +  grid[x,y-i].GetIsLanded());
 				Destroy(grid[x,y-i].gameObject);
+			}
+			
+			for (int i = 1; i <= up; i++)
+			{
+				Destroy(grid[x,y+i].gameObject);
 			}
 		}	
 	}
+	
+	private static int CheckDown(){
+	
+		int count =1;
+		
+		while (y-count>=0 && grid[x,y-count].GetBallColor()==color){
+			count++;
+			
+		}
+	return count;
+	}
+	
+	private static int CheckUp(){
+		
+		int count =0;
+		
+		while (y+count+1<NumberOfRowes && grid[x,y+1+count]	 && grid[x,y+1+count].GetBallColor()==color){
+			count++;
+			
+		}
+		return count;
+	}
+	
 		
 	private static void CheckForRow(){
 		int MatchOnRight= CountRight();
 		int MatchOnLeft = CountLeft ();
 			if(MatchOnLeft+MatchOnRight>=3){
-				foundSequence=true;
-				ChangeAllBallsLandBool(false,y);
+
 				for (int i = 0; i <= MatchOnRight; i++)
 				
 				{
-				print("Destroy " +  (i+1));
+				
 					Destroy(grid[x+i,y].gameObject);
 				}
 				for (int i = 0; i < MatchOnLeft; i++)
 				
 				{
-				print("Destroy " +  (i+1));
+			
 					Destroy(grid[x-i-1,y].gameObject);
 				}
 			}
@@ -162,28 +159,6 @@ public class GameGrid : MonoBehaviour {
 		}
 		return count;
 	}
-	public static void ChangeAllBallsLandBool(bool changeTO,int y){
-	
 
-		for (int i = 0; i < numberOfPipes; i++)
-		{	
-			for (int j = 0; j < NumberOfRowes; j++){
-				if(grid[i,j] && j>y){
-					grid[i,j].UnLandBall(changeTO);
-					
-				}	
-			}	
-		}
-	}
-	
-	public static bool GetfoundSequence(){
-	
-		return foundSequence;
-	}
-	
-	public static void SetfoundSequence(bool set){
-	
-		foundSequence=set;
-	}
 	
 }

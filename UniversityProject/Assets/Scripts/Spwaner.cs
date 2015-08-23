@@ -11,14 +11,16 @@ public class Spwaner : MonoBehaviour {
 		colorsArray [1] = new Vector4 (1, 0, 0, 1);
 		colorsArray [2] = new Vector4 (0, 1, 0, 1);
 		colorsArray [3] = new Vector4 (0.5f, 0.5f, 0.5f, 1);
-		colorsArray [4] = new Vector4 (0, 1, 1, 0);
-		           
+		colorsArray [4] = new Vector4 (1, 0, 1, 1);
+		
+		Invoke("Spwan",2);           
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
+	/*
 	public void RandomlySpwanBalls(){
 		if(Time.timeSinceLevelLoad>2){
 			
@@ -36,26 +38,25 @@ public class Spwaner : MonoBehaviour {
 		}
 		
 
-	}
+	}*/
 	public void Spwan(){
+		Invoke("Spwan",3.2f);   
 		//print("countCallForSpwan " + countCallForSpwan);
-		if (countCallForSpwan==1 || GameGrid.GetfoundSequence()==false){
+		
 			int rand;
 			rand = Random.Range (0, 11);
 			
 			Transform origin = this.gameObject.transform.GetChild (rand);
 			
 			Ball ball = (Ball) Instantiate (preFarbBall, origin.position, Quaternion.identity);
-			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,4)];
+			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,5)];
+		print (	ball.GetComponent<SpriteRenderer> ().color);
 			ball.transform.parent = origin.transform;
 			
-				GameGrid.SetfoundSequence(false);
-				GameGrid.ChangeAllBallsLandBool(true,-1);
-			countCallForSpwan=0;
 			
-		}
-		if(GameGrid.GetfoundSequence()==true){
-			countCallForSpwan--;
-		}
-	}
+		
+			
+	}	
+
+	
 }
