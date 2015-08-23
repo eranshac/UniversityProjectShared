@@ -12,7 +12,6 @@ public class Controller : MonoBehaviour {
 	private int minFreq, maxFreq; 						//Max and min frequencies window
 	public string selectedDevice { get; private set; }	//Mic selected
 	private bool micSelected = false;					//Mic flag
-	private Text ControllerPitchDisplayToScreen;
 
 	float[] data;										//Sound samples data
 	public int cumulativeDetections= 4; 				//Number of consecutive detections used to determine current note
@@ -73,7 +72,6 @@ public class Controller : MonoBehaviour {
 	IEnumerator Start() {
 
 
-		ControllerPitchDisplayToScreen = (Text)GameObject.FindGameObjectWithTag ("FrequencyText").GetComponent<Text>();
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftmost = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 righttmost = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -148,7 +146,6 @@ public class Controller : MonoBehaviour {
 			x=pitchDetector.lastFrequency();
 			detectionsMade [detectionPointer++] = midiant;
 			detectionPointer %= cumulativeDetections;
-			ControllerPitchDisplayToScreen.text=x.ToString();
 
 			
 		}
