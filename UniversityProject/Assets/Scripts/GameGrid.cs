@@ -40,7 +40,8 @@ public class GameGrid : MonoBehaviour {
 		
 		CheckForColumn();
 		CheckForRow();
-		
+		CheckForDiagBottomLeft();
+		CheckForDiagBottomRight();
 		countCallForCheck--;
 	
 	}
@@ -141,6 +142,88 @@ public class GameGrid : MonoBehaviour {
 	
 	}
 	
+	private static void CheckForDiagBottomLeft(){
+	
+		int downLeft= CountDiagDownLeft();
+		int upRight = CountDiagUpRight();
+		
+		if (downLeft+upRight>=3){
+		
+			for(int i=0;i<=upRight;i++){
+				
+				Destroy(grid[x+i,y+i].gameObject);
+			}
+			
+			for(int i=1;i<=downLeft;i++){
+				
+				Destroy(grid[x-i,y-i].gameObject);
+			}
+		}
+	
+	}
+	
+	
+	private static void	CheckForDiagBottomRight(){
+	
+		int downRight= CountDiagDownRight();
+		int upLeft = CountDiagUpLeft();
+		
+		if (downRight+upLeft>=3){
+			
+			for(int i=0;i<=downRight;i++){
+				
+				Destroy(grid[x+i,y-i].gameObject);
+			}
+			
+			for(int i=1;i<=upLeft;i++){
+				
+				Destroy(grid[x-i,y+i].gameObject);
+			}
+		}
+	
+	
+	}
+	
+	
+	private static int CountDiagUpLeft(){
+		int count=0;
+		while(x-count-1>=0 && y+count+1<NumberOfRowes && grid[x-count-1,y+count+1] && grid[x-count-1,y+count+1].GetBallColor()==color){
+			count++;
+			
+		}
+		return count;
+	}
+	
+	
+	private static int CountDiagDownRight(){
+		int count=0;
+		while(x+count+1< grid.GetLength(0)-1 && y-count-1>=0 && grid[x+count+1,y-count-1] && grid[x+count+1,y-count-1].GetBallColor()==color){
+			count++;
+			
+		}
+		return count;
+	}
+	
+	private static int CountDiagDownLeft(){
+	int count=0;
+		while(x-count-1>=0 && y-count-1>=0 && grid[x-count-1,y-count-1] && grid[x-count-1,y-count-1].GetBallColor()==color){
+		count++;
+		
+		}
+		return count;
+	}
+	private static int CountDiagUpRight(){
+		int count=0;
+		while(x+count+1< grid.GetLength(0)-1 && y+count+1<NumberOfRowes && grid[x+count+1,y+count+1] && grid[x+count+1,y+count+1].GetBallColor()==color){
+			count++;
+			
+		}
+		return count;
+	}
+
+//
+	
+
 	private static int CountRight(){
 	int count =0;
 		//print(grid.GetLength(0));
