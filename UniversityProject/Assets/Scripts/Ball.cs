@@ -32,6 +32,18 @@ public class Ball : MonoBehaviour {
 		
 			float WidthOfBar = bar.GetComponent<BoxCollider2D> ().size.x;
 			transform.position += Vector3.left * speed * Time.deltaTime;
+			
+			if(Input.GetKey(KeyCode.RightArrow)){
+				
+				transform.position += Vector3.right * 20 * Time.deltaTime;
+				
+			}
+			
+			if(Input.GetKey(KeyCode.LeftArrow)){
+				
+				transform.position += Vector3.left * 20 * Time.deltaTime;
+				
+			}
 		
 			transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.8f), transform.position.y, transform.position.z);
 		}
