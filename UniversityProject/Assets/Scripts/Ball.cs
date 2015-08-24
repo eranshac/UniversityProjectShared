@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Ball : MonoBehaviour {
-	private bool isLanded=false;
+	private bool isLanded=false,isCollided=false;
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
@@ -20,10 +20,10 @@ public class Ball : MonoBehaviour {
 
 	void Update () {
 	
-		if (isLanded == false) {
+		if (isCollided == false) {
 			float currentPitch=Controller.x ;
 			speed=0;
-			//print ("currentPitch: "+ currentPitch+" speed: "+speed);
+	
 
 			if (currentPitch> 0) {
 				speed = (currentPitch - 220) / 15;
@@ -52,19 +52,42 @@ public class Ball : MonoBehaviour {
 	
 	}
 
-
+	void UpdateArray(){
+	
+		if(isLanded==true)
+		{
+			
+			GameGrid.SetNullToPreviousPositionOfBall(xPosition,yPosition);
+		}
+		this.isLanded=true;
+		
+		UpdateTheBallsXandY();
+		
+		
+	
+		GameGrid.InsertBallToGrid(this);
+	
+	}
 	void OnCollisionEnter2D(Collision2D collision2D){
+	isCollided=true;
 		rigidbody2d.gravityScale = 3;
+		
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
-			print (currentPositionIsDifferentFromPreviousPosition());
-			if( currentPositionIsDifferentFromPreviousPosition() && isLanded==true)
-			{
-				GameGrid.SetNullToPreviousPositionOfBall(xPosition,yPosition);
+		
+			UpdateArray();
+	
+			int i=1;
+			int yCurrentPos=	(int)GameGrid.GetCurrentBallPosition (this).y;
+			int xCurrentPos = (int)GameGrid.GetCurrentBallPosition (this).x;
+		
+			while( yCurrentPos+i+1<GameGrid.GetNumberOfRows() && GameGrid.grid[xCurrentPos,yCurrentPos+i+1]){
+			
+				GameGrid.grid[xCurrentPos,yCurrentPos+i+1].UpdateArray();
+				i++;
+				
 			}
-			this.isLanded=true;
-
-			UpdateTheBallsXandY(collision2D);
-			GameGrid.InsertBallToGrid(this);
+			
+			
 		}
 
 	}
@@ -77,7 +100,7 @@ public class Ball : MonoBehaviour {
 		return isXValueDifferent && isYValueDifferent;
 	}
 
-	void UpdateTheBallsXandY (Collision2D collision2D)
+	void UpdateTheBallsXandY ()
 	{
 		xPosition = (int)GameGrid.GetCurrentBallPosition (this).x;
 		yPosition = (int)GameGrid.GetCurrentBallPosition (this).y;

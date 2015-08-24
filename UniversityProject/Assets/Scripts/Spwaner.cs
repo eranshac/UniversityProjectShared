@@ -41,7 +41,7 @@ public class Spwaner : MonoBehaviour {
 	}*/
 	public void Spwan(){
 		Invoke("Spwan",3.2f);   
-		//print("countCallForSpwan " + countCallForSpwan);
+		
 		
 			int rand;
 			rand = Random.Range (0, 11);
@@ -49,6 +49,7 @@ public class Spwaner : MonoBehaviour {
 			Transform origin = this.gameObject.transform.GetChild (rand);
 			
 			Ball ball = (Ball) Instantiate (preFarbBall, origin.position, Quaternion.identity);
+			print ("Random.Range(0,4 " + Random.Range(0,4)); 
 			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,5)];
 		
 			ball.transform.parent = origin.transform;

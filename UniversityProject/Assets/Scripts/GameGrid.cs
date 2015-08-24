@@ -16,7 +16,7 @@ public class GameGrid : MonoBehaviour {
 	
 
 	void Update(){
-		print (grid[0,3]);
+	
 
 	}
 	
@@ -44,7 +44,7 @@ public class GameGrid : MonoBehaviour {
 	}
 	private static void CanCheck(){
 		if(countCallForCheck>0){
-			print ("How many times im stuck in a CanCheck-loop");
+			
 			CanCheck();
 		}else{
 			countCallForCheck++;
@@ -63,7 +63,7 @@ public class GameGrid : MonoBehaviour {
 		return ballPosition;
 	}
 
-	static void insertBallIntoGrid (Vector2 ballPosition,Ball ball)
+	public static void insertBallIntoGrid (Vector2 ballPosition,Ball ball)
 	{
 		grid[(int)ballPosition.x, (int)ballPosition.y] = ball;
 	}
@@ -210,7 +210,7 @@ public class GameGrid : MonoBehaviour {
 
 	private static int CountRight(){
 	int count =0;
-		//print(grid.GetLength(0));
+		
 		while(x+count+1< grid.GetLength(0)-1 && grid[x+1+count ,y] && grid[x+1+count ,y].GetBallColor()==color){
 			count++;
 		}
@@ -237,5 +237,9 @@ public class GameGrid : MonoBehaviour {
 	{
 		Destroy(grid[x,y].gameObject);
 
+	}
+	public static int GetNumberOfRows(){
+	
+		return NumberOfRowes;
 	}
 }
