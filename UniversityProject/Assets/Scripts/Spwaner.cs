@@ -13,7 +13,7 @@ public class Spwaner : MonoBehaviour {
 		colorsArray [3] = new Vector4 (0.5f, 0.5f, 0.5f, 1);
 		colorsArray [4] = new Vector4 (1, 0, 1, 1);
 		
-		Invoke("Spwan",2);           
+		Invoke("Spwan",3.2f);           
 	}
 	
 	// Update is called once per frame
@@ -50,7 +50,7 @@ public class Spwaner : MonoBehaviour {
 			
 			Ball ball = (Ball) Instantiate (preFarbBall, origin.position, Quaternion.identity);
 			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,5)];
-		print (	ball.GetComponent<SpriteRenderer> ().color);
+		
 			ball.transform.parent = origin.transform;
 			
 			

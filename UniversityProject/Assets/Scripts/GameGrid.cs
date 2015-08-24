@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+	
 
 public class GameGrid : MonoBehaviour {
 
@@ -10,6 +12,7 @@ public class GameGrid : MonoBehaviour {
 	private static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
 	private static int x,y;
 	private static Vector4 color;
+	
 
 	
 	
@@ -85,7 +88,7 @@ public class GameGrid : MonoBehaviour {
 	
 		if(down+up >=4){
 			
-			
+			print ("ok");
 			for (int i = 0; i < down; i++)
 			{
 				Destroy(grid[x,y-i].gameObject);
@@ -96,6 +99,7 @@ public class GameGrid : MonoBehaviour {
 				Destroy(grid[x,y+i].gameObject);
 			}
 		}	
+		
 	}
 	
 	private static int CheckDown(){
@@ -125,7 +129,7 @@ public class GameGrid : MonoBehaviour {
 		int MatchOnRight= CountRight();
 		int MatchOnLeft = CountLeft ();
 			if(MatchOnLeft+MatchOnRight>=3){
-
+				
 				for (int i = 0; i <= MatchOnRight; i++)
 				
 				{
@@ -138,7 +142,15 @@ public class GameGrid : MonoBehaviour {
 			
 					Destroy(grid[x-i-1,y].gameObject);
 				}
-			}
+		
+			
+		
+			
+		}
+	
+		
+		
+	
 	
 	}
 	
@@ -242,6 +254,6 @@ public class GameGrid : MonoBehaviour {
 		}
 		return count;
 	}
-
 	
+
 }

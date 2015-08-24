@@ -56,6 +56,7 @@ public class Ball : MonoBehaviour {
 		rigidbody2d.gravityScale = 3;
 			
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
+			
 			this.isLanded=true;			
 			GameGrid.InsertBallToGrid(this);
 		}
