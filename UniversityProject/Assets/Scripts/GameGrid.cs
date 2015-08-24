@@ -9,94 +9,84 @@ public class GameGrid : MonoBehaviour {
 	private static int numberOfPipes=12, NumberOfRowes=8;
 	public static Spwaner spwaner;
 	private static int countCallForCheck=0;
-	private static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
+
+	public static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
 	private static int x,y;
 	private static Vector4 color;
 	
 
-	
+	void Update(){
+		print (grid[0,3]);
+
+	}
 	
 
 	void Start () {
-	
-
-	
-	
-		
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
 		numberOfColoumns = barInstance.transform.childCount;
-		
-	}
-
-
-	void Update(){
-	
-	
 	}
 
 	private static void CheckForSequence (){
-		//int x = (int)GridX-1
-		
-		
-
-		
-		
 		CheckForColumn();
 		CheckForRow();
 		CheckForDiagBottomLeft();
 		CheckForDiagBottomRight();
 		countCallForCheck--;
-	
 	}
 
 	public static void InsertBallToGrid(Ball ball){
-
-		float ballRadius = ball.GetComponent<CircleCollider2D>().radius;
-		float ballXPosition = ball.transform.position.x;
-		float GridX = Mathf.Round( (ballXPosition+1)/2 );
-		float GridY = Mathf.Round(( ball.transform.position.y )/(ballRadius*2));
-		x=(int)GridX-1;
-		y=(int)GridY-1;
-		grid[x, y] = ball;
-		
+		Vector2 ballPosition= GetCurrentBallPosition(ball);
+		insertBallIntoGrid (ballPosition,ball);
 		color=ball.GetBallColor();
-	
 		CanCheck();
 		
 		
 	}
-
 	private static void CanCheck(){
 		if(countCallForCheck>0){
+			print ("How many times im stuck in a CanCheck-loop");
 			CanCheck();
 		}else{
 			countCallForCheck++;
 			CheckForSequence();
 		}
 	}
+	public static Vector2 GetCurrentBallPosition (Ball ball)
+	{
+		float ballRadius = ball.GetComponent<CircleCollider2D>().radius;
+		float ballXPosition = ball.transform.position.x;
+		float GridX = Mathf.Round( (ballXPosition+1)/2 );
+		float GridY = Mathf.Round(( ball.transform.position.y )/(ballRadius*2));
+		x=(int)GridX-1;
+		y=(int)GridY-1;
+		Vector2 ballPosition = new Vector2 (x,y);
+		return ballPosition;
+	}
+
+	static void insertBallIntoGrid (Vector2 ballPosition,Ball ball)
+	{
+		grid[(int)ballPosition.x, (int)ballPosition.y] = ball;
+	}
+
+
 
 	public Spwaner GetSpwaner(){
 
 		return spwaner;
 	}
 	
-	
 	private static void CheckForColumn(){
-			
 		int up=CheckUp();
 		int down= 	CheckDown();
-	
 		if(down+up >=4){
-			
-			print ("ok");
 			for (int i = 0; i < down; i++)
 			{
-				Destroy(grid[x,y-i].gameObject);
+				DestroyBallInGrid(x,y-i);
 			}
 			
 			for (int i = 1; i <= up; i++)
 			{
-				Destroy(grid[x,y+i].gameObject);
+				DestroyBallInGrid(x,y+i);
 			}
 		}	
 		
@@ -129,41 +119,23 @@ public class GameGrid : MonoBehaviour {
 		int MatchOnRight= CountRight();
 		int MatchOnLeft = CountLeft ();
 			if(MatchOnLeft+MatchOnRight>=3){
-				
 				for (int i = 0; i <= MatchOnRight; i++)
-				
 				{
-				
-					Destroy(grid[x+i,y].gameObject);
+					DestroyBallInGrid(x+i,y);
 				}
 				for (int i = 0; i < MatchOnLeft; i++)
-				
 				{
-			
-					Destroy(grid[x-i-1,y].gameObject);
+					DestroyBallInGrid(x-i-1,y);
 				}
-		
-			
-		
-			
 		}
-	
-		
-		
-	
-	
 	}
 	
 	private static void CheckForDiagBottomLeft(){
-	
 		int downLeft= CountDiagDownLeft();
 		int upRight = CountDiagUpRight();
-		
 		if (downLeft+upRight>=3){
-		
 			for(int i=0;i<=upRight;i++){
-				
-				Destroy(grid[x+i,y+i].gameObject);
+				DestroyBallInGrid(x+i,y+i);
 			}
 			
 			for(int i=1;i<=downLeft;i++){
@@ -244,6 +216,11 @@ public class GameGrid : MonoBehaviour {
 		}
 	return count;
 	}
+
+
+	public static void SetNullToPreviousPositionOfBall(int xPosition,int yPosition){
+		grid [xPosition,yPosition] = null;
+	}
 	
 	
 	private static int CountLeft(){
@@ -256,4 +233,9 @@ public class GameGrid : MonoBehaviour {
 	}
 	
 
+	public static void DestroyBallInGrid (int x, int y)
+	{
+		Destroy(grid[x,y].gameObject);
+
+	}
 }

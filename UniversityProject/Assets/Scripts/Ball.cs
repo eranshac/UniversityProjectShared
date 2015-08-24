@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class Ball : MonoBehaviour {
 	private bool isLanded=false;
 	public Bar bar;
+	private int xPosition=9999;
+	private int yPosition=9999;
 
 	public Rigidbody2D rigidbody2d;
 	 float speed;
@@ -52,19 +54,37 @@ public class Ball : MonoBehaviour {
 
 
 	void OnCollisionEnter2D(Collision2D collision2D){
-	
 		rigidbody2d.gravityScale = 3;
-			
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
-			
-			this.isLanded=true;			
+			print (currentPositionIsDifferentFromPreviousPosition());
+			if( currentPositionIsDifferentFromPreviousPosition() && isLanded==true)
+			{
+				GameGrid.SetNullToPreviousPositionOfBall(xPosition,yPosition);
+			}
+			this.isLanded=true;
+
+			UpdateTheBallsXandY(collision2D);
 			GameGrid.InsertBallToGrid(this);
 		}
 
 	}
+
+	bool currentPositionIsDifferentFromPreviousPosition ()
+	{
+		bool isXValueDifferent= ((int)GameGrid.GetCurrentBallPosition (this).x!=xPosition);
+		bool isYValueDifferent= ((int)GameGrid.GetCurrentBallPosition (this).y!=yPosition);
+
+		return isXValueDifferent && isYValueDifferent;
+	}
+
+	void UpdateTheBallsXandY (Collision2D collision2D)
+	{
+		xPosition = (int)GameGrid.GetCurrentBallPosition (this).x;
+		yPosition = (int)GameGrid.GetCurrentBallPosition (this).y;
+
+	}
 	
 	public Vector4 GetBallColor(){
-	
 	return ballColor;
 	
 	}
