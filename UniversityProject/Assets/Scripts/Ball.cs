@@ -7,15 +7,16 @@ public class Ball : MonoBehaviour {
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
-
+	private LevelManager levleManager;
+	private bool VoiceIsOn=false;
 	public Rigidbody2D rigidbody2d;
 	 float speed;
 	
 	private Vector4 ballColor;
 	 void Start () {
 		rigidbody2d.velocity=new Vector3 (0,-3,0);
-	
 		ballColor = GetComponent<SpriteRenderer>().color;
+		levleManager = FindObjectOfType<LevelManager>();
 	}
 
 	void Update () {
@@ -25,7 +26,7 @@ public class Ball : MonoBehaviour {
 			speed=0;
 	
 
-			if (currentPitch> 0) {
+			if (currentPitch> 0 && VoiceIsOn==true) {
 				speed = (currentPitch - 220) / 15;
 				
 
@@ -78,6 +79,14 @@ public class Ball : MonoBehaviour {
 	
 			int i=1;
 			int yCurrentPos=	(int)GameGrid.GetCurrentBallPosition (this).y;
+		
+			
+			if(yCurrentPos==7){
+			LoseTheGame();
+			
+			}
+			
+			
 			int xCurrentPos = (int)GameGrid.GetCurrentBallPosition (this).x;
 		
 			while( yCurrentPos+i+1<GameGrid.GetNumberOfRows() && GameGrid.grid[xCurrentPos,yCurrentPos+i+1]){
@@ -112,7 +121,11 @@ public class Ball : MonoBehaviour {
 	
 	}
 	
+			
+	private void LoseTheGame(){
+		levleManager.LoadLevel("MainMenu");
 
-
+	}
+	
 	
 }
