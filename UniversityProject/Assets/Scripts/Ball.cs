@@ -74,10 +74,10 @@ public class Ball : MonoBehaviour {
 		rigidbody2d.gravityScale = 3;
 		
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
-		
+			print ("collision");
 			UpdateArray();
-	
-			int i=1;
+			
+			
 			int yCurrentPos=	(int)GameGrid.GetCurrentBallPosition (this).y;
 		
 			
@@ -86,9 +86,9 @@ public class Ball : MonoBehaviour {
 			
 			}
 			
-			
+			int i=1;
 			int xCurrentPos = (int)GameGrid.GetCurrentBallPosition (this).x;
-		
+											
 			while( yCurrentPos+i+1<GameGrid.GetNumberOfRows() && GameGrid.grid[xCurrentPos,yCurrentPos+i+1]){
 			
 				GameGrid.grid[xCurrentPos,yCurrentPos+i+1].UpdateArray();

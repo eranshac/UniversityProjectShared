@@ -17,7 +17,7 @@ public class GameGrid : MonoBehaviour {
 
 	void Update(){
 	
-
+		
 	}
 	
 
@@ -215,7 +215,7 @@ public class GameGrid : MonoBehaviour {
 		
 			count++;
 		}
-		print("CountRight " + count);
+	
 	return count;
 	}
 
@@ -231,7 +231,7 @@ public class GameGrid : MonoBehaviour {
 		while(x-count-1>=0 && grid[x-1-count ,y] && grid[x-1-count ,y].GetBallColor()==color){
 			count++;
 		}
-		print("CountLeft " + count);
+		
 		return count;
 	}
 	
