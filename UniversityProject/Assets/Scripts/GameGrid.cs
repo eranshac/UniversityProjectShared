@@ -182,7 +182,7 @@ public class GameGrid : MonoBehaviour {
 	
 	private static int CountDiagDownRight(){
 		int count=0;
-		while(x+count+1< grid.GetLength(0)-1 && y-count-1>=0 && grid[x+count+1,y-count-1] && grid[x+count+1,y-count-1].GetBallColor()==color){
+		while(x+count+1<numberOfPipes && y-count-1>=0 && grid[x+count+1,y-count-1] && grid[x+count+1,y-count-1].GetBallColor()==color){
 			count++;
 			
 		}
@@ -199,7 +199,7 @@ public class GameGrid : MonoBehaviour {
 	}
 	private static int CountDiagUpRight(){
 		int count=0;
-		while(x+count+1< grid.GetLength(0)-1 && y+count+1<NumberOfRowes && grid[x+count+1,y+count+1] && grid[x+count+1,y+count+1].GetBallColor()==color){
+		while(x+count+1<numberOfPipes && y+count+1<NumberOfRowes && grid[x+count+1,y+count+1] && grid[x+count+1,y+count+1].GetBallColor()==color){
 			count++;
 			
 		}
