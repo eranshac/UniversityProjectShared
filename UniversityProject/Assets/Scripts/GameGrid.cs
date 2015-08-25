@@ -59,6 +59,7 @@ public class GameGrid : MonoBehaviour {
 		float GridY = Mathf.Round(( ball.transform.position.y )/(ballRadius*2));
 		x=(int)GridX-1;
 		y=(int)GridY-1;
+		print ("x  " + x + "  y  " + y);
 		Vector2 ballPosition = new Vector2 (x,y);
 		return ballPosition;
 	}
@@ -211,7 +212,7 @@ public class GameGrid : MonoBehaviour {
 	private static int CountRight(){
 	int count =0;
 		
-		while(x+count+1< grid.GetLength(0)-1 && grid[x+1+count ,y] && grid[x+1+count ,y].GetBallColor()==color){
+		while(x+count+1< numberOfPipes && grid[x+1+count ,y] && grid[x+1+count ,y].GetBallColor()==color){
 		
 			count++;
 		}

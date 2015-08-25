@@ -7,6 +7,7 @@ public class Ball : MonoBehaviour {
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
+
 	private LevelManager levleManager;
 	private bool VoiceIsOn=false;
 	public Rigidbody2D rigidbody2d;
@@ -52,6 +53,8 @@ public class Ball : MonoBehaviour {
 		}
 	
 	}
+	
+	
 
 	void UpdateArray(){
 	
@@ -68,6 +71,8 @@ public class Ball : MonoBehaviour {
 	
 		GameGrid.InsertBallToGrid(this);
 	
+		
+	
 	}
 	void OnCollisionEnter2D(Collision2D collision2D){
 	isCollided=true;
@@ -79,6 +84,7 @@ public class Ball : MonoBehaviour {
 			
 			
 			int yCurrentPos=	(int)GameGrid.GetCurrentBallPosition (this).y;
+			print ("yCurrentPos  " + yCurrentPos);
 		
 			
 			if(yCurrentPos==7){
