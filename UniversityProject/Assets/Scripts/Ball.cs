@@ -15,7 +15,8 @@ public class Ball : MonoBehaviour {
 	
 	private Vector4 ballColor;
 	 void Start () {
-		rigidbody2d.velocity=new Vector3 (0,-3,0);
+	  
+		rigidbody2d.velocity=new Vector3 (0,-3 -Time.timeSinceLevelLoad*0.01f ,0);
 		ballColor = GetComponent<SpriteRenderer>().color;
 		levleManager = FindObjectOfType<LevelManager>();
 	}
@@ -79,12 +80,12 @@ public class Ball : MonoBehaviour {
 		rigidbody2d.gravityScale = 3;
 		
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
-			print ("collision");
+			
 			UpdateArray();
 			
 			
 			int yCurrentPos=	(int)GameGrid.GetCurrentBallPosition (this).y;
-			print ("yCurrentPos  " + yCurrentPos);
+			
 		
 			
 			if(yCurrentPos==6){

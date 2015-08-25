@@ -82,12 +82,15 @@ public class GameGrid : MonoBehaviour {
 		if(down+up >=4){
 			for (int i = 0; i < down; i++)
 			{
+				
 				DestroyBallInGrid(x,y-i);
+				
 			}
 			
 			for (int i = 1; i <= up; i++)
 			{
 				DestroyBallInGrid(x,y+i);
+				
 			}
 		}	
 		
