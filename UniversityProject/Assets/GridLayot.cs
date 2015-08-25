@@ -13,16 +13,16 @@ public class GridLayot : MonoBehaviour {
 	void Update () {
 		for (int i =0;i<12;i++){
 		
-			for (int j=0;j<8;j++)
+			for (int j=0;j<7;j++)
 			{
 			
 				if(GameGrid.grid[i,j]){
 				
-					this.gameObject.transform.GetChild(8*i+j).GetComponent<Text>().color=GameGrid.grid[i,j].GetBallColor();
+					this.gameObject.transform.GetChild(7*i+j).GetComponent<Text>().color=GameGrid.grid[i,j].GetBallColor();
 					 
 				}else{
 				
-					this.gameObject.transform.GetChild(8*i+j).GetComponent<Text>().color=Color.black;
+					this.gameObject.transform.GetChild(7*i+j).GetComponent<Text>().color=Color.black;
 				}
 			
 			}
