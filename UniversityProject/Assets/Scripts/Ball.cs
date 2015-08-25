@@ -87,7 +87,7 @@ public class Ball : MonoBehaviour {
 			print ("yCurrentPos  " + yCurrentPos);
 		
 			
-			if(yCurrentPos==7){
+			if(yCurrentPos==6){
 			LoseTheGame();
 			
 			}

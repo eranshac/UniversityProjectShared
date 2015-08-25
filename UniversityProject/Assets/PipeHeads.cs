@@ -19,13 +19,13 @@ public class PipeHeads : MonoBehaviour {
 		for(int i=0; i<GameGrid.GetnumberOfPipes();i++){
 			Transform child= this.gameObject.transform.GetChild(i);
 			Animator animator = child.gameObject.GetComponent<Animator>();
-			if(GameGrid.grid[i,6] && animator.GetBool("isWhite")){
+			if(GameGrid.grid[i,5] && animator.GetBool("isWhite")){
 			
 			animator.SetBool("isRed",true);
 			animator.SetBool("isBlinking",true);
 			animator.SetBool("isWhite",false);
 				
-			}else if(!GameGrid.grid[i,6] && animator.GetBool("isRed")){
+			}else if(!GameGrid.grid[i,5] && animator.GetBool("isRed")){
 				
 				animator.SetBool("isRed",false);
 				animator.SetBool("isBlinking",false);

@@ -6,7 +6,7 @@ using System;
 public class GameGrid : MonoBehaviour {
 
 	public int numberOfColoumns;
-	private static int numberOfPipes=12, NumberOfRowes=8;
+	private static int numberOfPipes=12, NumberOfRowes=7;
 	public static Spwaner spwaner;
 	private static int countCallForCheck=0;
 
