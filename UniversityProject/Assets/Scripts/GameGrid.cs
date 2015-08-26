@@ -9,7 +9,6 @@ public class GameGrid : MonoBehaviour {
 	private static int numberOfPipes=12, NumberOfRowes=7;
 	public static Spwaner spwaner;
 	private static int countCallForCheck=0;
-
 	public static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
 	private static int x,y;
 	private static Vector4 color;
@@ -59,7 +58,6 @@ public class GameGrid : MonoBehaviour {
 		float GridY = Mathf.Round(( ball.transform.position.y )/(ballRadius*2));
 		x=(int)GridX-1;
 		y=(int)GridY-1;
-		print ("x  " + x + "  y  " + y);
 		Vector2 ballPosition = new Vector2 (x,y);
 		return ballPosition;
 	}
@@ -92,6 +90,8 @@ public class GameGrid : MonoBehaviour {
 				DestroyBallInGrid(x,y+i);
 				
 			}
+			GameObject popSound=(GameObject)Resources.Load("prefabs/PopSound");
+			Instantiate(popSound,new Vector3(0,0,0),Quaternion.identity);
 		}	
 		
 	}
