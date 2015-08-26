@@ -78,6 +78,8 @@ public class GameGrid : MonoBehaviour {
 		int up=CheckUp();
 		int down= 	CheckDown();
 		if(down+up >=4){
+			MakePopSound(down+up);
+
 			for (int i = 0; i < down; i++)
 			{
 				
@@ -90,8 +92,6 @@ public class GameGrid : MonoBehaviour {
 				DestroyBallInGrid(x,y+i);
 				
 			}
-			GameObject popSound=(GameObject)Resources.Load("prefabs/PopSound");
-			Instantiate(popSound,new Vector3(0,0,0),Quaternion.identity);
 		}	
 		
 	}
@@ -123,21 +123,34 @@ public class GameGrid : MonoBehaviour {
 		int MatchOnRight= CountRight();
 		int MatchOnLeft = CountLeft ();
 			if(MatchOnLeft+MatchOnRight>=3){
+				MakePopSound(MatchOnLeft+MatchOnRight+1);
 				for (int i = 0; i <= MatchOnRight; i++)
 				{
+
 					DestroyBallInGrid(x+i,y);
+
+
 				}
 				for (int i = 0; i < MatchOnLeft; i++)
 				{
+
 					DestroyBallInGrid(x-i-1,y);
 				}
 		}
+	}
+
+	static void MakePopSound (int numberOfExplosions)
+	{
+		PopSoundFX popSound=Resources.Load<PopSoundFX>("prefabs/PopSound");
+		popSound.numberOfExplosions = numberOfExplosions;
+		Instantiate(popSound,new Vector3(0,0,0),Quaternion.identity);
 	}
 	
 	private static void CheckForDiagBottomLeft(){
 		int downLeft= CountDiagDownLeft();
 		int upRight = CountDiagUpRight();
 		if (downLeft+upRight>=3){
+			MakePopSound(downLeft+upRight+1);
 			for(int i=0;i<=upRight;i++){
 				DestroyBallInGrid(x+i,y+i);
 			}
@@ -157,7 +170,8 @@ public class GameGrid : MonoBehaviour {
 		int upLeft = CountDiagUpLeft();
 		
 		if (downRight+upLeft>=3){
-			
+			MakePopSound(downRight+upLeft+1);
+
 			for(int i=0;i<=downRight;i++){
 				
 				Destroy(grid[x+i,y-i].gameObject);

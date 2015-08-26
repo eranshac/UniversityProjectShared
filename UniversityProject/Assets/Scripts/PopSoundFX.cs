@@ -4,14 +4,13 @@ using System.Collections;
 public class PopSoundFX : MonoBehaviour {
 
 	public AudioSource myAudioSource;
-	private int numberOfExplosions=4;
+	public int numberOfExplosions;
 	/*public PopSoundFX(int i){
 		numberOfExplosions=i;
 	}*/
 	void Start () {
 		StartCoroutine("PlaySoundFx");
-	
-		Invoke ("DestroySoundFx",10);
+		Invoke ("DestroySoundFx",4);
 
 	
 	}
