@@ -15,10 +15,8 @@ public class Flask : MonoBehaviour {
 	}
 	void OnCollisionEnter2D(Collision2D collider){
 		string layer = LayerMask.LayerToName (collider.gameObject.layer);
-		print (layer);	
 		if (layer=="Ball") {
-			myRigidbody.gravityScale = 2;
-			Destroy (collider.gameObject);
+			myRigidbody.gravityScale = 1.5f;
 		}
 
 	}

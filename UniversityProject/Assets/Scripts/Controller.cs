@@ -12,7 +12,6 @@ public class Controller : MonoBehaviour {
 	private int minFreq, maxFreq; 						//Max and min frequencies window
 	public string selectedDevice { get; private set; }	//Mic selected
 	private bool micSelected = false;					//Mic flag
-
 	float[] data;										//Sound samples data
 	public int cumulativeDetections= 4; 				//Number of consecutive detections used to determine current note
 	int [] detectionsMade;								//Detections buffer

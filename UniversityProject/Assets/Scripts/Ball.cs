@@ -3,14 +3,17 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Ball : MonoBehaviour {
-	private bool isLanded=false,isCollided=false;
+	private bool isLanded=false ,isCollided=false;
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
-
+	private bool moveBallWithVoice=true;
 	private LevelManager levleManager;
-	private bool VoiceIsOn=false;
 	public Rigidbody2D rigidbody2d;
+	public float middlePitch=240;
+	public float restrictedSpeedValue=20;
+	public bool constantBallSpeed=true;
+
 	 float speed;
 	
 	private Vector4 ballColor;
@@ -22,33 +25,40 @@ public class Ball : MonoBehaviour {
 	}
 
 	void Update () {
-	
 		if (isCollided == false) {
-			float currentPitch=Controller.x ;
-			speed=0;
-	
-
-			if (currentPitch> 0 && VoiceIsOn==true) {
-				speed = (currentPitch - 220) / 15;
-				
-
-			
-			}
-		
 			float WidthOfBar = bar.GetComponent<BoxCollider2D> ().size.x;
-			transform.position += Vector3.left * speed * Time.deltaTime;
+
+			if(moveBallWithVoice){
+				float currentPitch=Controller.x ;
+				print (currentPitch);
+				speed=0;
+				if (currentPitch> 0 ) {
+					if(constantBallSpeed){
+						speed=-1*restrictedSpeedValue*Mathf.Sign((currentPitch - middlePitch));
+					}
+					else{
+						speed = -1*(currentPitch - middlePitch) / 10;
+						speed=Mathf.Clamp(speed,0,restrictedSpeedValue);
+
+					}
+
+				}
+				transform.position += Vector3.left * speed * Time.deltaTime;
 			
-			if(Input.GetKey(KeyCode.RightArrow)){
-				
-				transform.position += Vector3.right * 20 * Time.deltaTime;
-				
 			}
-			
-			if(Input.GetKey(KeyCode.LeftArrow)){
-				
-				transform.position += Vector3.left * 20 * Time.deltaTime;
-				
+			else{
+				if(Input.GetKey(KeyCode.RightArrow)){
+					transform.position += Vector3.right * 20 * Time.deltaTime;
+				}
+				if(Input.GetKey(KeyCode.LeftArrow)){
+					
+					transform.position += Vector3.left * 20 * Time.deltaTime;
+				}
 			}
+
+		
+
+
 		
 			transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.8f), transform.position.y, transform.position.z);
 		}
@@ -76,7 +86,16 @@ public class Ball : MonoBehaviour {
 	
 	}
 	void OnCollisionEnter2D(Collision2D collision2D){
-	isCollided=true;
+		print (LayerMask.LayerToName (gameObject.layer));
+		if (LayerMask.LayerToName (collision2D.gameObject.layer) == "Flask") {
+			gameObject.GetComponent<Rigidbody2D>().gravityScale=7;
+			collision2D.gameObject.GetComponent<BoxCollider2D>().enabled=false;
+		}
+
+		if (gameObject.tag != "menuBall")
+			isCollided=true;
+
+
 		rigidbody2d.gravityScale = 3;
 		
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {

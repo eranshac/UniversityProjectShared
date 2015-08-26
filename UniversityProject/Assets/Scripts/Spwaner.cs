@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Spwaner : MonoBehaviour {
@@ -50,7 +50,7 @@ public class Spwaner : MonoBehaviour {
 			
 			Ball ball = (Ball) Instantiate (preFarbBall, origin.position, Quaternion.identity);
 			
-			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,1)];
+			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,5)];
 		
 			ball.transform.parent = origin.transform;
 			
