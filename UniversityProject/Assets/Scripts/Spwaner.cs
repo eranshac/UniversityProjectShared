@@ -13,6 +13,10 @@ public class Spwaner : MonoBehaviour {
 		colorsArray [3] = new Vector4 (0.5f, 0.5f, 0.5f, 1);
 		colorsArray [4] = new Vector4 (1, 0, 1, 1);
 		
+<<<<<<< HEAD
+=======
+		//SpwanForStart();
+>>>>>>> origin/master
 		Invoke("Spwan",3.2f);           
 	}
 	
