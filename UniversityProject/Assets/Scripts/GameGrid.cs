@@ -17,22 +17,51 @@ public class GameGrid : MonoBehaviour {
 	public static int destroyd = 0;
 	private static int pointsTypeOfSequanceCoefficient;
 	public static int pointsNumOfSequanceCoefficient;
+	public PointsAnimation SequenceAnim ;
+	public PointsAnimation pointsAnim;
 
-	
 
 	void Update(){
 	
 	textPoints.text= points.ToString();
 	if (destroyd>0){
-			
 			print ("pointsCoefficient " + pointsTypeOfSequanceCoefficient);
 			print("pointsNumOfSequanceCoefficient " + pointsNumOfSequanceCoefficient); 
-			AddPoints((destroyd-3)*pointsTypeOfSequanceCoefficient*100*((int) Mathf.Pow(2, pointsNumOfSequanceCoefficient)));
+			int point=(destroyd-3)*pointsTypeOfSequanceCoefficient*100*((int) Mathf.Pow(2, pointsNumOfSequanceCoefficient));
+			AddPoints(point);
 			pointsNumOfSequanceCoefficient++;
 			destroyd=0;
+			ActivatePointsAnimation (point);
+			ActivateSequencesAnimation(pointsNumOfSequanceCoefficient);
 			}
 	
 	}
+
+	void ActivateSequencesAnimation (int numOfSequenses)
+	{
+		if (numOfSequenses != 0) {
+			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/SequencesAnimation");
+			sequencesAnimation.PointsTextController.text = numOfSequenses.ToString () + " Sequenses ! ! !" ;
+			SequenceAnim = (PointsAnimation)Instantiate (sequencesAnimation, new Vector3 (0, 0, 0), Quaternion.identity);
+			GameObject animationCanvas = GameObject.FindGameObjectWithTag ("AnimationCanvas");
+			SequenceAnim.transform.parent = animationCanvas.transform;
+			Invoke("destroyAnimation",3);
+		}
+	}
+
+	public  void ActivatePointsAnimation (int score)
+	{
+		PointsAnimation pointsAnimation=Resources.Load<PointsAnimation>("prefabs/PointsAnimation");
+		pointsAnimation.PointsTextController.text = score.ToString ();
+		 pointsAnim=(PointsAnimation)Instantiate(pointsAnimation,new Vector3(0,0,0),Quaternion.identity);
+		GameObject animationCanvas =GameObject.FindGameObjectWithTag ("AnimationCanvas");
+		pointsAnim.transform.parent = animationCanvas.transform;
+	}
+	public void destroyAnimation(){
+		Destroy (SequenceAnim);
+
+	}
+
 
 	
 
@@ -41,11 +70,11 @@ public class GameGrid : MonoBehaviour {
 	
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
 		numberOfColoumns = barInstance.transform.childCount;
+
 	}
 
 	public static void AddPoints (int pointsToAdd){
-	
-	points=points+pointsToAdd;
+		points=points+pointsToAdd;
 	}
 
 

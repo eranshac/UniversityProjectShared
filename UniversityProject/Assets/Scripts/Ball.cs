@@ -14,7 +14,8 @@ public class Ball : MonoBehaviour {
 	public float restrictedSpeedValue=20;
 	public bool constantBallSpeed=true;
 	private bool test=false;
-
+	private bool hasMadeSuctionSound=false;
+	SuctionSoundFX suctionSound;
 	 float speed;
 	
 	private Vector4 ballColor;
@@ -58,7 +59,12 @@ public class Ball : MonoBehaviour {
 					
 					transform.position += Vector3.left * 20 * Time.deltaTime;
 				}
-		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.8f), transform.position.y, transform.position.z);
+		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.5f), transform.position.y, transform.position.z);
+		}
+		if (!hasMadeSuctionSound && Application.loadedLevelName == "Game" && transform.position.y<12.2) {
+			rigidbody2d.velocity=new Vector3 (0,-0 -Time.timeSinceLevelLoad*0.01f ,0);
+
+
 		}
 	
 	}
@@ -101,8 +107,12 @@ public class Ball : MonoBehaviour {
 		if (gameObject.tag != "menuBall")
 			isCollided=true;
 
-
-		rigidbody2d.gravityScale = 3;
+		if (LayerMask.LayerToName (collision2D.gameObject.layer) != "Flask" && !hasMadeSuctionSound) {
+			rigidbody2d.gravityScale = 10;
+			 suctionSound = Resources.Load<SuctionSoundFX> ("prefabs/SuctionSound");
+			Invoke("MakeSuctionSound",0.2f);
+			hasMadeSuctionSound=true;
+		}
 		
 		
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
@@ -133,7 +143,9 @@ public class Ball : MonoBehaviour {
 		}
 
 	}
-
+	void MakeSuctionSound(){
+		Instantiate (suctionSound, new Vector3 (0, 0, 0), Quaternion.identity);
+	}
 	bool currentPositionIsDifferentFromPreviousPosition ()
 	{
 		bool isXValueDifferent= ((int)GameGrid.GetCurrentBallPosition (this).x!=xPosition);
