@@ -5,6 +5,8 @@ public class Spwaner : MonoBehaviour {
 	public Ball preFarbBall;
 	private Vector4[] colorsArray;
 	private static int countCallForSpwan=0;
+	private int lastRand=0;
+
 	void Start () {
 		colorsArray = new Vector4[5];
 		colorsArray [0] = new Vector4 (1, 0.92f, 0.016f, 1);
@@ -13,7 +15,26 @@ public class Spwaner : MonoBehaviour {
 		colorsArray [3] = new Vector4 (0.5f, 0.5f, 0.5f, 1);
 		colorsArray [4] = new Vector4 (1, 0, 1, 1);
 		
+		SpwanForStart();
 		Invoke("Spwan",3.2f);           
+	}
+	
+	private void SpwanForStart(){
+		foreach (Transform child in transform) {
+		print ("ok");
+			if(Random.value<0.75){
+				
+				SpwanWithYPos(child,1);
+				if(Random.value<0.5){
+						SpwanWithYPos(child,3);
+						if(Random.value<0.25)
+						SpwanWithYPos(child,5);
+						
+					}
+			}
+		
+		}
+	
 	}
 	
 	// Update is called once per frame
@@ -43,21 +64,34 @@ public class Spwaner : MonoBehaviour {
 		Invoke("Spwan",3.2f);   
 		
 		
-			int rand;
-			rand = Random.Range (0, 11);
 			
-			Transform origin = this.gameObject.transform.GetChild (rand);
+		
+			
+			Transform origin = this.gameObject.transform.GetChild (Random.Range (0, 11));
 			
 			Ball ball = (Ball) Instantiate (preFarbBall, origin.position, Quaternion.identity);
 			
 			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,2)];
 		
-			ball.transform.parent = origin.transform;
+			//ball.transform.parent = origin.transform;
 			
 			
 		
 			
 	}	
+	
+	private void SpwanWithYPos(Transform origin, int y){
+	
+		Ball ball = (Ball) Instantiate (preFarbBall, new Vector2(origin.position.x,y), Quaternion.identity);
+		int rand = Random.Range(0,5);
+		while(rand==lastRand)
+			rand = Random.Range(0,5);
+		ball.GetComponent<SpriteRenderer> ().color = colorsArray[rand];
+		lastRand=rand;
+		ball.transform.parent = origin.transform;
+	
+	
+	}
 
 	
 }

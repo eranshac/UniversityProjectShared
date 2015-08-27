@@ -37,6 +37,7 @@ public class GameGrid : MonoBehaviour {
 	
 
 	void Start () {
+	
 		textPoints= GameObject.Find("Points").GetComponent<Text>();
 	
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
@@ -44,7 +45,7 @@ public class GameGrid : MonoBehaviour {
 	}
 
 	public static void AddPoints (int pointsToAdd){
-	
+	if(Time.timeSinceLevelLoad>2)
 	points=points+pointsToAdd;
 	}
 
