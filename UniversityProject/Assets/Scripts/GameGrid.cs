@@ -19,10 +19,21 @@ public class GameGrid : MonoBehaviour {
 	public static int pointsNumOfSequanceCoefficient;
 	public PointsAnimation SequenceAnim ;
 	public PointsAnimation pointsAnim;
+	private SequenceSound sequenceSound;
+
+	int numOfSequensesForAnimation;
+	int score;
+
 	
-	
-	void Update(){
+	void Start () {
+		sequenceSound = Resources.Load<SequenceSound> ("prefabs/SoundPrefabs/sequenceSound");
+		textPoints= GameObject.Find("Points").GetComponent<Text>();
+		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
+		numberOfColoumns = barInstance.transform.childCount;
 		
+	}
+
+	void Update(){
 		textPoints.text= points.ToString();
 		if (destroyd>0){
 			print ("pointsCoefficient " + pointsTypeOfSequanceCoefficient);
@@ -31,31 +42,55 @@ public class GameGrid : MonoBehaviour {
 			AddPoints(point);
 			pointsNumOfSequanceCoefficient++;
 			destroyd=0;
-			ActivatePointsAnimation (point);
-			ActivateSequencesAnimation(pointsNumOfSequanceCoefficient);
+			CallAnimations(point,pointsNumOfSequanceCoefficient);
 		}
 		
 	}
-	
-	void ActivateSequencesAnimation (int numOfSequenses)
+
+	void CallAnimations (int point, int pointsNumOfSequanceCoefficient)
 	{
-		if (numOfSequenses != 0) {
-			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/SequencesAnimation");
-			print(sequencesAnimation);
-			sequencesAnimation.PointsTextController.text = numOfSequenses.ToString () + " Sequenses ! ! !" ;
+		score=point;
+		numOfSequensesForAnimation=pointsNumOfSequanceCoefficient;
+		if(numOfSequensesForAnimation==1){
+			//do nothing
+		}
+		if(numOfSequensesForAnimation==2){
+			Invoke("ActivateSequencesAnimation",0.1f);
+		}
+		if(numOfSequensesForAnimation==3){
+			Invoke("ActivateSequencesAnimation",1);
+		}
+		if(numOfSequensesForAnimation==4){
+			Invoke("ActivateSequencesAnimation",1.3f);
+		}
+		if(numOfSequensesForAnimation==5){
+			Invoke("ActivateSequencesAnimation",1.6f);
+		}
+		ActivatePointsAnimation ();
+	}
+	
+	void ActivateSequencesAnimation ()
+	{
+		if (numOfSequensesForAnimation != 0) {
+			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/AnimationPrefabs/SequencesAnimation");
+			sequencesAnimation.PointsTextController.text = numOfSequensesForAnimation.ToString () + " Sequenses ! ! !" ;
 			SequenceAnim = (PointsAnimation)Instantiate (sequencesAnimation, new Vector3 (0, 0, 0), Quaternion.identity);
 			GameObject animationCanvas = GameObject.FindGameObjectWithTag ("AnimationCanvas");
 			SequenceAnim.transform.parent = animationCanvas.transform;
+			Instantiate (sequenceSound);
+
+
 			Invoke("destroyAnimation",3);
 		}
 	}
 	
-	public  void ActivatePointsAnimation (int score)
+	public  void ActivatePointsAnimation ()
 	{
-		PointsAnimation pointsAnimation=Resources.Load<PointsAnimation>("prefabs/PointsAnimation");
+
+		PointsAnimation pointsAnimation=Resources.Load<PointsAnimation>("prefabs/AnimationPrefabs/PointsAnimation");
 		print(pointsAnimation);
 
-		pointsAnimation.PointsTextController.text = score.ToString ();
+		pointsAnimation.PointsTextController.text = "+"+ score.ToString ();
 
 		pointsAnim=(PointsAnimation)Instantiate(pointsAnimation,new Vector3(0,0,0),Quaternion.identity);
 		GameObject animationCanvas =GameObject.FindGameObjectWithTag ("AnimationCanvas");
@@ -68,14 +103,7 @@ public class GameGrid : MonoBehaviour {
 	
 	
 	
-	
-	void Start () {
-		textPoints= GameObject.Find("Points").GetComponent<Text>();
-		
-		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
-		numberOfColoumns = barInstance.transform.childCount;
-		
-	}
+
 	
 	public static void AddPoints (int pointsToAdd){
 		points=points+pointsToAdd;
@@ -222,7 +250,7 @@ public class GameGrid : MonoBehaviour {
 	
 	static void MakePopSound (int numberOfExplosions)
 	{
-		PopSoundFX popSound=Resources.Load<PopSoundFX>("prefabs/PopSound");
+		PopSoundFX popSound=Resources.Load<PopSoundFX>("prefabs/SoundPrefabs/PopSound");
 		popSound.numberOfExplosions = numberOfExplosions;
 		Instantiate(popSound,new Vector3(0,0,0),Quaternion.identity);
 	}

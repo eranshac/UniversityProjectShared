@@ -151,7 +151,7 @@ public class Ball : MonoBehaviour {
 			GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
 			if(suctionSoundGarbage.transform.childCount>0){
 				soundToDestroy=suctionSoundGarbage.transform.GetChild(0).gameObject;
-				Invoke("Destruct",0.3f);
+				soundToDestroy.GetComponent<AudioSource>().pitch=2;
 
 			}
 		}
@@ -159,7 +159,7 @@ public class Ball : MonoBehaviour {
 		   
 	}
 	void MakeSuctionSound(float delayInSound){
-		suctionSound = Resources.Load<SuctionSoundFX> ("prefabs/SuctionSound");
+		suctionSound = Resources.Load<SuctionSoundFX> ("prefabs/SoundPrefabs/SuctionSound");
 		GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
 		if (!suctionSoundGarbage) {
 			suctionSoundGarbage=new GameObject();
