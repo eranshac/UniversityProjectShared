@@ -50,7 +50,7 @@ public class Spwaner : MonoBehaviour {
 			
 			Ball ball = (Ball) Instantiate (preFarbBall, origin.position, Quaternion.identity);
 			
-			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,5)];
+			ball.GetComponent<SpriteRenderer> ().color = colorsArray[Random.Range(0,2)];
 		
 			ball.transform.parent = origin.transform;
 			

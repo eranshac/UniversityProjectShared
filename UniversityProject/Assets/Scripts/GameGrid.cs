@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-	
+using UnityEngine.UI;
 
 public class GameGrid : MonoBehaviour {
 
@@ -10,44 +10,78 @@ public class GameGrid : MonoBehaviour {
 	public static Spwaner spwaner;
 	private static int countCallForCheck=0;
 	public static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
-	private static int x,y;
-	private static Vector4 color;
+	//private static int x,y;
+//	private static Vector4 color;
+	private static int points = 0;
+	private static Text textPoints;
+	public static int destroyd = 0;
+	private static int pointsTypeOfSequanceCoefficient;
+	public static int pointsNumOfSequanceCoefficient;
+
 	
 
 	void Update(){
 	
-		
+	textPoints.text= points.ToString();
+	if (destroyd>0){
+			
+			print ("pointsCoefficient " + pointsTypeOfSequanceCoefficient);
+			print("pointsNumOfSequanceCoefficient " + pointsNumOfSequanceCoefficient); 
+			AddPoints((destroyd-3)*pointsTypeOfSequanceCoefficient*100*((int) Mathf.Pow(2, pointsNumOfSequanceCoefficient)));
+			pointsNumOfSequanceCoefficient++;
+			destroyd=0;
+			}
+	
 	}
+
 	
 
 	void Start () {
+		textPoints= GameObject.Find("Points").GetComponent<Text>();
+	
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
 		numberOfColoumns = barInstance.transform.childCount;
 	}
 
-	private static void CheckForSequence (){
-		CheckForColumn();
-		CheckForRow();
-		CheckForDiagBottomLeft();
-		CheckForDiagBottomRight();
+	public static void AddPoints (int pointsToAdd){
+	
+	points=points+pointsToAdd;
+	}
+
+
+
+
+	private static void CheckForSequence (int x, int y,Vector4 color){
+
+		CheckForColumn(x,y,color);
+		CheckForRow(x,y,color);
+		CheckForDiagBottomLeft(x,y,color);
+		CheckForDiagBottomRight(x,y,color);
+	
+		
 		countCallForCheck--;
+	
 	}
 
 	public static void InsertBallToGrid(Ball ball){
 		Vector2 ballPosition= GetCurrentBallPosition(ball);
 		insertBallIntoGrid (ballPosition,ball);
-		color=ball.GetBallColor();
-		CanCheck();
+		
+		CanCheck((int) GetCurrentBallPosition(ball).x,(int) GetCurrentBallPosition(ball).y,ball.GetBallColor());
 		
 		
-	}
-	private static void CanCheck(){
+
+
+}
+	
+	private static void CanCheck(int x, int y, Vector4 color){
 		if(countCallForCheck>0){
 			
-			CanCheck();
+			CanCheck(x,y,color);
 		}else{
+		
 			countCallForCheck++;
-			CheckForSequence();
+			CheckForSequence(x,y,color);
 		}
 	}
 	public static Vector2 GetCurrentBallPosition (Ball ball)
@@ -56,9 +90,7 @@ public class GameGrid : MonoBehaviour {
 		float ballXPosition = ball.transform.position.x;
 		float GridX = Mathf.Round( (ballXPosition+1)/2 );
 		float GridY = Mathf.Round(( ball.transform.position.y )/(ballRadius*2));
-		x=(int)GridX-1;
-		y=(int)GridY-1;
-		Vector2 ballPosition = new Vector2 (x,y);
+		Vector2 ballPosition = new Vector2 ((int)GridX-1,(int)GridY-1);
 		return ballPosition;
 	}
 
@@ -74,29 +106,39 @@ public class GameGrid : MonoBehaviour {
 		return spwaner;
 	}
 	
-	private static void CheckForColumn(){
-		int up=CheckUp();
-		int down= 	CheckDown();
+	private static void CheckForColumn(int x,int y, Vector4 color ){
+		int up=CheckUp(x,y,color);
+		int down= 	CheckDown(x,y,color);
+		
 		if(down+up >=4){
+			pointsTypeOfSequanceCoefficient=1;
 			MakePopSound(down+up);
-
+			
 			for (int i = 0; i < down; i++)
 			{
+			
+					DestroyBallInGrid(x,y-i);
+			
 				
-				DestroyBallInGrid(x,y-i);
 				
 			}
 			
 			for (int i = 1; i <= up; i++)
 			{
-				DestroyBallInGrid(x,y+i);
 				
+					DestroyBallInGrid(x,y+i);
+			
+				
+			
 			}
+	
+		
+		
 		}	
 		
 	}
 	
-	private static int CheckDown(){
+	private static int CheckDown(int x, int y, Vector4 color){
 	
 		int count =1;
 		
@@ -107,7 +149,7 @@ public class GameGrid : MonoBehaviour {
 	return count;
 	}
 	
-	private static int CheckUp(){
+	private static int CheckUp(int x, int y, Vector4 color){
 		
 		int count =0;
 		
@@ -119,13 +161,16 @@ public class GameGrid : MonoBehaviour {
 	}
 	
 		
-	private static void CheckForRow(){
-		int MatchOnRight= CountRight();
-		int MatchOnLeft = CountLeft ();
+	private static void CheckForRow(int x, int y, Vector4 color){
+		int MatchOnRight= CountRight(x,y,color);
+		int MatchOnLeft = CountLeft (x,y,color);
 			if(MatchOnLeft+MatchOnRight>=3){
+			
+			pointsTypeOfSequanceCoefficient=2;
 				MakePopSound(MatchOnLeft+MatchOnRight+1);
 				for (int i = 0; i <= MatchOnRight; i++)
-				{
+				{	
+				
 
 					DestroyBallInGrid(x+i,y);
 
@@ -133,11 +178,14 @@ public class GameGrid : MonoBehaviour {
 				}
 				for (int i = 0; i < MatchOnLeft; i++)
 				{
-
+				
 					DestroyBallInGrid(x-i-1,y);
 				}
+			
 		}
 	}
+
+	
 
 	static void MakePopSound (int numberOfExplosions)
 	{
@@ -146,10 +194,12 @@ public class GameGrid : MonoBehaviour {
 		Instantiate(popSound,new Vector3(0,0,0),Quaternion.identity);
 	}
 	
-	private static void CheckForDiagBottomLeft(){
-		int downLeft= CountDiagDownLeft();
-		int upRight = CountDiagUpRight();
+	private static void CheckForDiagBottomLeft(int x, int y, Vector4 color){
+		int downLeft= CountDiagDownLeft(x,y,color);
+		int upRight = CountDiagUpRight(x,y,color);
 		if (downLeft+upRight>=3){
+			
+			pointsTypeOfSequanceCoefficient=4;
 			MakePopSound(downLeft+upRight+1);
 			for(int i=0;i<=upRight;i++){
 				DestroyBallInGrid(x+i,y+i);
@@ -157,29 +207,31 @@ public class GameGrid : MonoBehaviour {
 			
 			for(int i=1;i<=downLeft;i++){
 				
-				Destroy(grid[x-i,y-i].gameObject);
+				DestroyBallInGrid(x-i,y-i);
 			}
 		}
 	
 	}
 	
 	
-	private static void	CheckForDiagBottomRight(){
+	private static void	CheckForDiagBottomRight(int x, int y, Vector4 color){
 	
-		int downRight= CountDiagDownRight();
-		int upLeft = CountDiagUpLeft();
+		int downRight= CountDiagDownRight(x,y,color);
+		int upLeft = CountDiagUpLeft(x,y,color);
 		
 		if (downRight+upLeft>=3){
+			
+			pointsTypeOfSequanceCoefficient=4;
 			MakePopSound(downRight+upLeft+1);
 
 			for(int i=0;i<=downRight;i++){
 				
-				Destroy(grid[x+i,y-i].gameObject);
+				DestroyBallInGrid(x+i,y-i);
 			}
 			
 			for(int i=1;i<=upLeft;i++){
 				
-				Destroy(grid[x-i,y+i].gameObject);
+				DestroyBallInGrid(x-i,y+i);
 			}
 		}
 	
@@ -187,7 +239,7 @@ public class GameGrid : MonoBehaviour {
 	}
 	
 	
-	private static int CountDiagUpLeft(){
+	private static int CountDiagUpLeft(int x, int y, Vector4 color){
 		int count=0;
 		while(x-count-1>=0 && y+count+1<NumberOfRowes && grid[x-count-1,y+count+1] && grid[x-count-1,y+count+1].GetBallColor()==color){
 			count++;
@@ -197,7 +249,7 @@ public class GameGrid : MonoBehaviour {
 	}
 	
 	
-	private static int CountDiagDownRight(){
+	private static int CountDiagDownRight(int x, int y, Vector4 color){
 		int count=0;
 		while(x+count+1<numberOfPipes && y-count-1>=0 && grid[x+count+1,y-count-1] && grid[x+count+1,y-count-1].GetBallColor()==color){
 			count++;
@@ -206,7 +258,7 @@ public class GameGrid : MonoBehaviour {
 		return count;
 	}
 	
-	private static int CountDiagDownLeft(){
+	private static int CountDiagDownLeft(int x, int y, Vector4 color){
 	int count=0;
 		while(x-count-1>=0 && y-count-1>=0 && grid[x-count-1,y-count-1] && grid[x-count-1,y-count-1].GetBallColor()==color){
 		count++;
@@ -214,7 +266,7 @@ public class GameGrid : MonoBehaviour {
 		}
 		return count;
 	}
-	private static int CountDiagUpRight(){
+	private static int CountDiagUpRight(int x, int y, Vector4 color){
 		int count=0;
 		while(x+count+1<numberOfPipes && y+count+1<NumberOfRowes && grid[x+count+1,y+count+1] && grid[x+count+1,y+count+1].GetBallColor()==color){
 			count++;
@@ -226,7 +278,7 @@ public class GameGrid : MonoBehaviour {
 //
 	
 
-	private static int CountRight(){
+	private static int CountRight(int x, int y, Vector4 color){
 	int count =0;
 		
 		while(x+count+1< numberOfPipes && grid[x+1+count ,y] && grid[x+1+count ,y].GetBallColor()==color){
@@ -243,7 +295,7 @@ public class GameGrid : MonoBehaviour {
 	}
 	
 	
-	private static int CountLeft(){
+	private static int CountLeft(int x, int y, Vector4 color){
 		int count =0;
 		
 		while(x-count-1>=0 && grid[x-1-count ,y] && grid[x-1-count ,y].GetBallColor()==color){
@@ -256,7 +308,9 @@ public class GameGrid : MonoBehaviour {
 
 	public static void DestroyBallInGrid (int x, int y)
 	{
+	
 		Destroy(grid[x,y].gameObject);
+	
 
 	}
 	public static int GetNumberOfRows(){
