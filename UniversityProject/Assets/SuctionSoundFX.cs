@@ -4,10 +4,11 @@ using System.Collections;
 public class SuctionSoundFX : MonoBehaviour {
 
 	public AudioSource myAudioSource;
+	public float delayInSound;
 	void Start () {
-		myAudioSource.Play ();
-		Invoke ("SelfDestruct", myAudioSource.clip.length);
-	
+		Invoke ("PlaySound", 0.5f+delayInSound);
+
+		
 	}
 	
 	// Update is called once per frame
@@ -15,4 +16,12 @@ public class SuctionSoundFX : MonoBehaviour {
 		Destroy (gameObject);
 
 	}
+	void PlaySound(){
+		myAudioSource.Play ();
+
+		Invoke ("SelfDestruct", myAudioSource.clip.length);
+
+	}
+
+
 }

@@ -16,6 +16,7 @@ public class Ball : MonoBehaviour {
 	private bool test=false;
 	private bool hasMadeSuctionSound=false;
 	SuctionSoundFX suctionSound;
+	GameObject soundToDestroy;
 	 float speed;
 	
 	private Vector4 ballColor;
@@ -61,11 +62,7 @@ public class Ball : MonoBehaviour {
 				}
 		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.5f), transform.position.y, transform.position.z);
 		}
-		if (!hasMadeSuctionSound && Application.loadedLevelName == "Game" && transform.position.y<12.2) {
-			rigidbody2d.velocity=new Vector3 (0,-0 -Time.timeSinceLevelLoad*0.01f ,0);
 
-
-		}
 	
 	}
 	
@@ -107,11 +104,20 @@ public class Ball : MonoBehaviour {
 		if (gameObject.tag != "menuBall")
 			isCollided=true;
 
-		if (LayerMask.LayerToName (collision2D.gameObject.layer) != "Flask" && !hasMadeSuctionSound) {
-			rigidbody2d.gravityScale = 10;
-			 suctionSound = Resources.Load<SuctionSoundFX> ("prefabs/SuctionSound");
-			Invoke("MakeSuctionSound",0.2f);
+		if (LayerMask.LayerToName (collision2D.gameObject.layer) != "Flask" && !hasMadeSuctionSound ) {
+			rigidbody2d.gravityScale = 4;
+
+			if( Application.loadedLevelName=="GAME"){
+
+				float delayInSound=0;
+				print (Application.loadedLevelName);
+				if(transform.position.y>11.93){
+					delayInSound=0.55f;
+				}
+			MakeSuctionSound(delayInSound);
+
 			hasMadeSuctionSound=true;
+			}
 		}
 		
 		
@@ -138,13 +144,30 @@ public class Ball : MonoBehaviour {
 				i++;
 				
 			}
-			
+
 			
 		}
+		if (collision2D.gameObject.tag == "Ball") {
+			GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
+			if(suctionSoundGarbage.transform.childCount>0){
+				soundToDestroy=suctionSoundGarbage.transform.GetChild(0).gameObject;
+				Invoke("Destruct",0.3f);
 
+			}
+		}
+
+		   
 	}
-	void MakeSuctionSound(){
-		Instantiate (suctionSound, new Vector3 (0, 0, 0), Quaternion.identity);
+	void MakeSuctionSound(float delayInSound){
+		suctionSound = Resources.Load<SuctionSoundFX> ("prefabs/SuctionSound");
+		GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
+		if (!suctionSoundGarbage) {
+			suctionSoundGarbage=new GameObject();
+			suctionSoundGarbage.tag="SuctionSoundGarbage";
+		}
+		suctionSound.delayInSound = delayInSound;
+		SuctionSoundFX sound=(SuctionSoundFX)Instantiate (suctionSound, new Vector3 (0, 0, 0), Quaternion.identity);
+		sound.transform.parent= suctionSoundGarbage.transform;
 	}
 	bool currentPositionIsDifferentFromPreviousPosition ()
 	{
@@ -170,6 +193,9 @@ public class Ball : MonoBehaviour {
 	private void LoseTheGame(){
 		levleManager.LoadLevel("MainMenu");
 
+	}
+	void Destruct(){
+		Destroy (soundToDestroy);
 	}
 	
 

@@ -41,6 +41,7 @@ public class GameGrid : MonoBehaviour {
 	{
 		if (numOfSequenses != 0) {
 			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/SequencesAnimation");
+			print(sequencesAnimation);
 			sequencesAnimation.PointsTextController.text = numOfSequenses.ToString () + " Sequenses ! ! !" ;
 			SequenceAnim = (PointsAnimation)Instantiate (sequencesAnimation, new Vector3 (0, 0, 0), Quaternion.identity);
 			GameObject animationCanvas = GameObject.FindGameObjectWithTag ("AnimationCanvas");
@@ -52,7 +53,10 @@ public class GameGrid : MonoBehaviour {
 	public  void ActivatePointsAnimation (int score)
 	{
 		PointsAnimation pointsAnimation=Resources.Load<PointsAnimation>("prefabs/PointsAnimation");
+		print(pointsAnimation);
+
 		pointsAnimation.PointsTextController.text = score.ToString ();
+
 		pointsAnim=(PointsAnimation)Instantiate(pointsAnimation,new Vector3(0,0,0),Quaternion.identity);
 		GameObject animationCanvas =GameObject.FindGameObjectWithTag ("AnimationCanvas");
 		pointsAnim.transform.parent = animationCanvas.transform;
