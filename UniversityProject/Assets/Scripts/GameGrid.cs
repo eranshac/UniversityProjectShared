@@ -4,66 +4,94 @@ using System;
 using UnityEngine.UI;
 
 public class GameGrid : MonoBehaviour {
-
+	
 	public int numberOfColoumns;
 	private static int numberOfPipes=12, NumberOfRowes=7;
 	public static Spwaner spwaner;
 	private static int countCallForCheck=0;
 	public static Ball[,] grid = new Ball[numberOfPipes, NumberOfRowes];
 	//private static int x,y;
-//	private static Vector4 color;
+	//	private static Vector4 color;
 	private static int points = 0;
 	private static Text textPoints;
 	public static int destroyd = 0;
 	private static int pointsTypeOfSequanceCoefficient;
 	public static int pointsNumOfSequanceCoefficient;
-
+	public PointsAnimation SequenceAnim ;
+	public PointsAnimation pointsAnim;
 	
-
+	
 	void Update(){
-	
-	textPoints.text= points.ToString();
-	if (destroyd>0){
-			
+		
+		textPoints.text= points.ToString();
+		if (destroyd>0){
 			print ("pointsCoefficient " + pointsTypeOfSequanceCoefficient);
 			print("pointsNumOfSequanceCoefficient " + pointsNumOfSequanceCoefficient); 
-			AddPoints((destroyd-3)*pointsTypeOfSequanceCoefficient*100*((int) Mathf.Pow(2, pointsNumOfSequanceCoefficient)));
+			int point=(destroyd-3)*pointsTypeOfSequanceCoefficient*100*((int) Mathf.Pow(2, pointsNumOfSequanceCoefficient));
+			AddPoints(point);
 			pointsNumOfSequanceCoefficient++;
 			destroyd=0;
-			}
-	
+			ActivatePointsAnimation (point);
+			ActivateSequencesAnimation(pointsNumOfSequanceCoefficient);
+		}
+		
 	}
-
 	
-
+	void ActivateSequencesAnimation (int numOfSequenses)
+	{
+		if (numOfSequenses != 0) {
+			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/SequencesAnimation");
+			sequencesAnimation.PointsTextController.text = numOfSequenses.ToString () + " Sequenses ! ! !" ;
+			SequenceAnim = (PointsAnimation)Instantiate (sequencesAnimation, new Vector3 (0, 0, 0), Quaternion.identity);
+			GameObject animationCanvas = GameObject.FindGameObjectWithTag ("AnimationCanvas");
+			SequenceAnim.transform.parent = animationCanvas.transform;
+			Invoke("destroyAnimation",3);
+		}
+	}
+	
+	public  void ActivatePointsAnimation (int score)
+	{
+		PointsAnimation pointsAnimation=Resources.Load<PointsAnimation>("prefabs/PointsAnimation");
+		pointsAnimation.PointsTextController.text = score.ToString ();
+		pointsAnim=(PointsAnimation)Instantiate(pointsAnimation,new Vector3(0,0,0),Quaternion.identity);
+		GameObject animationCanvas =GameObject.FindGameObjectWithTag ("AnimationCanvas");
+		pointsAnim.transform.parent = animationCanvas.transform;
+	}
+	public void destroyAnimation(){
+		Destroy (SequenceAnim);
+		
+	}
+	
+	
+	
+	
 	void Start () {
-	
 		textPoints= GameObject.Find("Points").GetComponent<Text>();
-	
+		
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
 		numberOfColoumns = barInstance.transform.childCount;
+		
 	}
-
+	
 	public static void AddPoints (int pointsToAdd){
-	if(Time.timeSinceLevelLoad>2)
-	points=points+pointsToAdd;
+		points=points+pointsToAdd;
 	}
-
-
-
-
+	
+	
+	
+	
 	private static void CheckForSequence (int x, int y,Vector4 color){
-
+		
 		CheckForColumn(x,y,color);
 		CheckForRow(x,y,color);
 		CheckForDiagBottomLeft(x,y,color);
 		CheckForDiagBottomRight(x,y,color);
-	
+		
 		
 		countCallForCheck--;
-	
+		
 	}
-
+	
 	public static void InsertBallToGrid(Ball ball){
 		Vector2 ballPosition= GetCurrentBallPosition(ball);
 		insertBallIntoGrid (ballPosition,ball);
@@ -71,16 +99,16 @@ public class GameGrid : MonoBehaviour {
 		CanCheck((int) GetCurrentBallPosition(ball).x,(int) GetCurrentBallPosition(ball).y,ball.GetBallColor());
 		
 		
-
-
-}
+		
+		
+	}
 	
 	private static void CanCheck(int x, int y, Vector4 color){
 		if(countCallForCheck>0){
 			
 			CanCheck(x,y,color);
 		}else{
-		
+			
 			countCallForCheck++;
 			CheckForSequence(x,y,color);
 		}
@@ -94,16 +122,16 @@ public class GameGrid : MonoBehaviour {
 		Vector2 ballPosition = new Vector2 ((int)GridX-1,(int)GridY-1);
 		return ballPosition;
 	}
-
+	
 	public static void insertBallIntoGrid (Vector2 ballPosition,Ball ball)
 	{
 		grid[(int)ballPosition.x, (int)ballPosition.y] = ball;
 	}
-
-
-
+	
+	
+	
 	public Spwaner GetSpwaner(){
-
+		
 		return spwaner;
 	}
 	
@@ -117,9 +145,9 @@ public class GameGrid : MonoBehaviour {
 			
 			for (int i = 0; i < down; i++)
 			{
-			
-					DestroyBallInGrid(x,y-i);
-			
+				
+				DestroyBallInGrid(x,y-i);
+				
 				
 				
 			}
@@ -127,27 +155,27 @@ public class GameGrid : MonoBehaviour {
 			for (int i = 1; i <= up; i++)
 			{
 				
-					DestroyBallInGrid(x,y+i);
-			
+				DestroyBallInGrid(x,y+i);
 				
-			
+				
+				
 			}
-	
-		
-		
+			
+			
+			
 		}	
 		
 	}
 	
 	private static int CheckDown(int x, int y, Vector4 color){
-	
+		
 		int count =1;
 		
 		while (y-count>=0 && grid[x,y-count]&& grid[x,y-count].GetBallColor()==color){
 			count++;
 			
 		}
-	return count;
+		return count;
 	}
 	
 	private static int CheckUp(int x, int y, Vector4 color){
@@ -161,33 +189,33 @@ public class GameGrid : MonoBehaviour {
 		return count;
 	}
 	
-		
+	
 	private static void CheckForRow(int x, int y, Vector4 color){
 		int MatchOnRight= CountRight(x,y,color);
 		int MatchOnLeft = CountLeft (x,y,color);
-			if(MatchOnLeft+MatchOnRight>=3){
+		if(MatchOnLeft+MatchOnRight>=3){
 			
 			pointsTypeOfSequanceCoefficient=2;
-				MakePopSound(MatchOnLeft+MatchOnRight+1);
-				for (int i = 0; i <= MatchOnRight; i++)
-				{	
+			MakePopSound(MatchOnLeft+MatchOnRight+1);
+			for (int i = 0; i <= MatchOnRight; i++)
+			{	
 				
-
-					DestroyBallInGrid(x+i,y);
-
-
-				}
-				for (int i = 0; i < MatchOnLeft; i++)
-				{
 				
-					DestroyBallInGrid(x-i-1,y);
-				}
+				DestroyBallInGrid(x+i,y);
+				
+				
+			}
+			for (int i = 0; i < MatchOnLeft; i++)
+			{
+				
+				DestroyBallInGrid(x-i-1,y);
+			}
 			
 		}
 	}
-
 	
-
+	
+	
 	static void MakePopSound (int numberOfExplosions)
 	{
 		PopSoundFX popSound=Resources.Load<PopSoundFX>("prefabs/PopSound");
@@ -211,12 +239,12 @@ public class GameGrid : MonoBehaviour {
 				DestroyBallInGrid(x-i,y-i);
 			}
 		}
-	
+		
 	}
 	
 	
 	private static void	CheckForDiagBottomRight(int x, int y, Vector4 color){
-	
+		
 		int downRight= CountDiagDownRight(x,y,color);
 		int upLeft = CountDiagUpLeft(x,y,color);
 		
@@ -224,7 +252,7 @@ public class GameGrid : MonoBehaviour {
 			
 			pointsTypeOfSequanceCoefficient=4;
 			MakePopSound(downRight+upLeft+1);
-
+			
 			for(int i=0;i<=downRight;i++){
 				
 				DestroyBallInGrid(x+i,y-i);
@@ -235,8 +263,8 @@ public class GameGrid : MonoBehaviour {
 				DestroyBallInGrid(x-i,y+i);
 			}
 		}
-	
-	
+		
+		
 	}
 	
 	
@@ -260,10 +288,10 @@ public class GameGrid : MonoBehaviour {
 	}
 	
 	private static int CountDiagDownLeft(int x, int y, Vector4 color){
-	int count=0;
+		int count=0;
 		while(x-count-1>=0 && y-count-1>=0 && grid[x-count-1,y-count-1] && grid[x-count-1,y-count-1].GetBallColor()==color){
-		count++;
-		
+			count++;
+			
 		}
 		return count;
 	}
@@ -275,22 +303,22 @@ public class GameGrid : MonoBehaviour {
 		}
 		return count;
 	}
-
-//
 	
-
+	//
+	
+	
 	private static int CountRight(int x, int y, Vector4 color){
-	int count =0;
+		int count =0;
 		
 		while(x+count+1< numberOfPipes && grid[x+1+count ,y] && grid[x+1+count ,y].GetBallColor()==color){
-		
+			
 			count++;
 		}
-	
-	return count;
+		
+		return count;
 	}
-
-
+	
+	
 	public static void SetNullToPreviousPositionOfBall(int xPosition,int yPosition){
 		grid [xPosition,yPosition] = null;
 	}
@@ -306,16 +334,16 @@ public class GameGrid : MonoBehaviour {
 		return count;
 	}
 	
-
+	
 	public static void DestroyBallInGrid (int x, int y)
 	{
-	
+		
 		Destroy(grid[x,y].gameObject);
-	
-
+		
+		
 	}
 	public static int GetNumberOfRows(){
-	
+		
 		return NumberOfRowes;
 	}
 	public static int GetnumberOfPipes(){
