@@ -7,7 +7,7 @@ public class Ball : MonoBehaviour {
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
-	private bool moveBallWithVoice=true;
+	private bool moveBallWithVoice=false;
 	private LevelManager levleManager;
 	public Rigidbody2D rigidbody2d;
 	public float middlePitch=240;
@@ -50,9 +50,7 @@ public class Ball : MonoBehaviour {
 
 				}
 				transform.position += Vector3.left * speed * Time.deltaTime;
-			
-			}
-			
+			}else
 				if(Input.GetKey(KeyCode.RightArrow)){
 					transform.position += Vector3.right * 20 * Time.deltaTime;
 				}
@@ -60,13 +58,7 @@ public class Ball : MonoBehaviour {
 					
 					transform.position += Vector3.left * 20 * Time.deltaTime;
 				}
-		
-
-		
-
-
-		
-			transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.8f), transform.position.y, transform.position.z);
+		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.8f), transform.position.y, transform.position.z);
 		}
 	
 	}
