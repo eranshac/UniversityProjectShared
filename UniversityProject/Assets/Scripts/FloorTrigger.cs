@@ -12,14 +12,13 @@ public class FloorTrigger : MonoBehaviour {
 	void Update () {
 	
 	}
-	void OnCollisionEnter2D(Collision2D flask){
+	void OnTriggerEnter2D(Collider2D flask){
+		print (flask.gameObject.tag);
 		if (flask.gameObject.tag =="SettingFlask") {
 			Application.LoadLevel("MainMenu");
-
-
-		} else {
-			Application.LoadLevel ("Game");
-
+		} 
+		if(flask.gameObject.tag =="PlayFlask"){
+			Application.LoadLevel ("GAME");
 		}
 
 
