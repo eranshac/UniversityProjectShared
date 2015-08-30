@@ -67,20 +67,37 @@ public class GameGrid : MonoBehaviour {
 			Invoke("ActivateSequencesAnimation",1.6f);
 		}
 		ActivatePointsAnimation ();
+		ActivatePointsSound ();
 	}
 	
 	void ActivateSequencesAnimation ()
 	{
 		if (numOfSequensesForAnimation != 0) {
 			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/AnimationPrefabs/SequencesAnimation");
-			sequencesAnimation.PointsTextController.text = numOfSequensesForAnimation.ToString () + " Sequenses ! ! !" ;
+			string textToDisplay="TextNotInitialized";
+			if(numOfSequensesForAnimation==1){
+				return;
+			}
+			if(numOfSequensesForAnimation==2){
+				textToDisplay="Double Explosion!";
+			}
+			if(numOfSequensesForAnimation==3){
+				textToDisplay="Triple Explosion!";
+
+
+			}
+			if(numOfSequensesForAnimation==4){
+				textToDisplay="Quadruple Explosion!";
+
+			}
+			sequencesAnimation.PointsTextController.text = textToDisplay ;
 			SequenceAnim = (PointsAnimation)Instantiate (sequencesAnimation, new Vector3 (0, 0, 0), Quaternion.identity);
 			GameObject animationCanvas = GameObject.FindGameObjectWithTag ("AnimationCanvas");
 			SequenceAnim.transform.parent = animationCanvas.transform;
 			Instantiate (sequenceSound);
 
 
-			Invoke("destroyAnimation",3);
+			Invoke("destroyAnimation",3f);
 		}
 	}
 	
@@ -96,6 +113,16 @@ public class GameGrid : MonoBehaviour {
 		GameObject animationCanvas =GameObject.FindGameObjectWithTag ("AnimationCanvas");
 		pointsAnim.transform.parent = animationCanvas.transform;
 	}
+	public  void ActivatePointsSound ()
+	{
+		SuctionSoundFX pointsSound=Resources.Load<SuctionSoundFX>("prefabs/SoundPrefabs/PointsSound");
+		Instantiate (pointsSound);
+
+		//PointsSound
+
+	}
+
+
 	public void destroyAnimation(){
 		Destroy (SequenceAnim);
 		
