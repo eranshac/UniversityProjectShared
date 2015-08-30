@@ -18,17 +18,22 @@ public class GetUserPitch : MonoBehaviour {
 		highestPitchSlider.value=0;
 		currentTimeForSlider=Time.timeSinceLevelLoad;
 		checkHigest=true;
+		GameObject.Find("ButtonForHigh").GetComponent<Button>().interactable=false;
+		GameObject.Find("ButtonForLow").GetComponent<Button>().interactable=false;
 		Invoke("Stop",5);
 	}
 	public void CheckLowestPitch(){
 		lowestPitchSlider.value=0;
 		currentTimeForSlider=Time.timeSinceLevelLoad;
 		checkLowest=true;
+		GameObject.Find("ButtonForLow").GetComponent<Button>().interactable=false;
+		GameObject.Find("ButtonForHigh").GetComponent<Button>().interactable=false;
 		Invoke("Stop",5);
 	}
 	
 	public void Stop(){
-	
+		GameObject.Find("ButtonForHigh").GetComponent<Button>().interactable=true;
+		GameObject.Find("ButtonForLow").GetComponent<Button>().interactable=true;
 	PlayerPrefsManager.SetHighestPitch(highestPitch);
 		PlayerPrefsManager.SetLowhestPitch(lowestpitch);
 	checkHigest=false;

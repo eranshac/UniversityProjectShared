@@ -7,6 +7,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 	const string Lowest_Pitch_Key = "Lowest Pitch";	
 	
 	
+	
 	// Use this for initialization
 	
 	public static void SetHighestPitch(float pitch){
@@ -14,7 +15,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 		PlayerPrefs.SetFloat(Highest_Pitch_Key,pitch);
 	}
 	
-	private static float GetHighestPitch(){
+	public static float GetHighestPitch(){
 	
 		return PlayerPrefs.GetFloat(Highest_Pitch_Key);
 	
@@ -25,7 +26,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 		PlayerPrefs.SetFloat(Lowest_Pitch_Key,pitch);
 	}
 	
-	private static float GetLowhestPitch(){
+	public static float GetLowhestPitch(){
 		
 		return PlayerPrefs.GetFloat(Lowest_Pitch_Key);
 		

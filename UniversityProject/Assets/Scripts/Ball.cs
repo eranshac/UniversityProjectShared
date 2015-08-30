@@ -7,15 +7,16 @@ public class Ball : MonoBehaviour {
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
-	private bool moveBallWithVoice=false;
+	private bool moveBallWithVoice=true;
 	private LevelManager levleManager;
 	public Rigidbody2D rigidbody2d;
-	public float middlePitch=240;
+	public float middlePitch;
 	public float restrictedSpeedValue=20;
 	public bool constantBallSpeed=true;
 	private bool test=false;
 	private bool hasMadeSuctionSound=false;
 	private bool hasMadeHitSound=false;
+
 
 	SuctionSoundFX suctionSound;
 	GameObject soundToDestroy;
@@ -29,6 +30,8 @@ public class Ball : MonoBehaviour {
 		rigidbody2d.velocity=new Vector3 (0,-3 -Time.timeSinceLevelLoad*0.01f ,0);
 		ballColor = GetComponent<SpriteRenderer>().color;
 		levleManager = FindObjectOfType<LevelManager>();
+		middlePitch=(PlayerPrefsManager.GetHighestPitch()+PlayerPrefsManager.GetLowhestPitch())/2;
+		print ("middlePitch " + middlePitch);
 	}
 	void OnDestroy() {
 	
@@ -42,7 +45,8 @@ public class Ball : MonoBehaviour {
 				float currentPitch=Controller.x ;
 				
 				speed=0;
-				if (currentPitch> 0 ) {
+			
+				if (currentPitch> 0 && (currentPitch>(1.1*middlePitch) || currentPitch<(0.9*middlePitch)) ) {
 					if(constantBallSpeed){
 						speed=-1*restrictedSpeedValue*Mathf.Sign((currentPitch - middlePitch));
 					}
