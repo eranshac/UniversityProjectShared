@@ -15,6 +15,8 @@ public class Ball : MonoBehaviour {
 	public bool constantBallSpeed=true;
 	private bool test=false;
 	private bool hasMadeSuctionSound=false;
+	private bool hasMadeHitSound=false;
+
 	SuctionSoundFX suctionSound;
 	GameObject soundToDestroy;
 	 float speed;
@@ -107,16 +109,13 @@ public class Ball : MonoBehaviour {
 		if (LayerMask.LayerToName (collision2D.gameObject.layer) != "Flask" && !hasMadeSuctionSound ) {
 			rigidbody2d.gravityScale = 4;
 
+
 			if( Application.loadedLevelName=="GAME"){
 
-				float delayInSound=0;
-				print (Application.loadedLevelName);
-				if(transform.position.y>11.93){
-					delayInSound=0.55f;
-				}
-			MakeSuctionSound(delayInSound);
 
-			hasMadeSuctionSound=true;
+				MakeSuctionSound(0);
+				hasMadeSuctionSound=true;
+
 			}
 		}
 		
@@ -147,11 +146,16 @@ public class Ball : MonoBehaviour {
 
 			
 		}
-		if (collision2D.gameObject.tag == "Ball") {
+		if (collision2D.gameObject.tag == "Ball" || collision2D.gameObject.tag == "Floor") {
 			GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
 			if(suctionSoundGarbage.transform.childCount>0){
+				MakeHitSound(0);
+				hasMadeHitSound=true;
 				soundToDestroy=suctionSoundGarbage.transform.GetChild(0).gameObject;
 				soundToDestroy.GetComponent<AudioSource>().pitch=2;
+				Destroy(soundToDestroy);
+
+
 
 			}
 		}
@@ -165,8 +169,17 @@ public class Ball : MonoBehaviour {
 			suctionSoundGarbage=new GameObject();
 			suctionSoundGarbage.tag="SuctionSoundGarbage";
 		}
-		suctionSound.delayInSound = delayInSound;
 		SuctionSoundFX sound=(SuctionSoundFX)Instantiate (suctionSound, new Vector3 (0, 0, 0), Quaternion.identity);
+		sound.transform.parent= suctionSoundGarbage.transform;
+	}
+	void MakeHitSound(float delayInSound){
+		SuctionSoundFX hitSound = Resources.Load<SuctionSoundFX> ("prefabs/SoundPrefabs/HitSound");
+		GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
+		if (!suctionSoundGarbage) {
+			suctionSoundGarbage=new GameObject();
+			suctionSoundGarbage.tag="SuctionSoundGarbage";
+		}
+		SuctionSoundFX sound=(SuctionSoundFX)Instantiate (hitSound, new Vector3 (0, 0, 0), Quaternion.identity);
 		sound.transform.parent= suctionSoundGarbage.transform;
 	}
 	bool currentPositionIsDifferentFromPreviousPosition ()

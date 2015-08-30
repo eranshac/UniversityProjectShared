@@ -4,9 +4,8 @@ using System.Collections;
 public class SuctionSoundFX : MonoBehaviour {
 
 	public AudioSource myAudioSource;
-	public float delayInSound;
 	void Start () {
-		Invoke ("PlaySound", 0.5f+delayInSound);
+		Invoke ("PlaySound", 0);
 
 		
 	}

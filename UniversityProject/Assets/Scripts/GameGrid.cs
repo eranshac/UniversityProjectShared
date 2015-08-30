@@ -179,25 +179,63 @@ public class GameGrid : MonoBehaviour {
 			{
 				
 				DestroyBallInGrid(x,y-i);
-				
-				
-				
 			}
 			
 			for (int i = 1; i <= up; i++)
 			{
 				
 				DestroyBallInGrid(x,y+i);
-				
-				
-				
+
 			}
-			
-			
-			
+
 		}	
 		
 	}
+
+	static void InstanciatExplotionAnimation (int x, int y)
+	{
+
+		if (grid [x, y].GetBallColor().x ==1 &&  grid [x, y].GetBallColor().y == 0.92f) {
+			BallExplosion yellowExplotionAnimation=Resources.Load<BallExplosion>("prefabs/AnimationPrefabs/YellowBallExplosionPosition/YellowBallExplosionPosition");
+			BallExplosion anim=	(BallExplosion)Instantiate(yellowExplotionAnimation,new Vector3(x,y,0),Quaternion.identity);	
+			anim.transform.position = grid [x, y].transform.position;
+
+		}
+		if (grid [x, y].GetBallColor().x ==1 &&  grid [x, y].GetBallColor().y == 0 &&  grid [x, y].GetBallColor().z == 0) {
+			BallExplosion redExplotionAnimation=Resources.Load<BallExplosion>("prefabs/AnimationPrefabs/RedBallExplosionPosition/RedBallExplosionPosition");
+			BallExplosion anim=	(BallExplosion)Instantiate(redExplotionAnimation,new Vector3(x,y,0),Quaternion.identity);	
+			anim.transform.position = grid [x, y].transform.position;
+		}
+		if (grid [x, y].GetBallColor().x ==0 &&  grid [x, y].GetBallColor().y == 1 &&  grid [x, y].GetBallColor().z == 0) {
+			BallExplosion greenExplotionAnimation=Resources.Load<BallExplosion>("prefabs/AnimationPrefabs/GreenBallExplosionPosition/GreenBallExplosionPosition");
+			BallExplosion anim=	(BallExplosion)Instantiate(greenExplotionAnimation,new Vector3(x,y,0),Quaternion.identity);	
+			anim.transform.position = grid [x, y].transform.position;
+		}
+		if (grid [x, y].GetBallColor().x ==0.5f) {
+			BallExplosion greyExplotionAnimation=Resources.Load<BallExplosion>("prefabs/AnimationPrefabs/GreyBallExplosionPosition/GreyBallExplosionPosition");
+			BallExplosion anim=	(BallExplosion)Instantiate(greyExplotionAnimation,new Vector3(x,y,0),Quaternion.identity);	
+			anim.transform.position = grid [x, y].transform.position;
+		}
+		if (grid [x, y].GetBallColor().x ==1 &&  grid [x, y].GetBallColor().y == 0 &&  grid [x, y].GetBallColor().z == 1 ) {
+			BallExplosion purpleExplotionAnimation=Resources.Load<BallExplosion>("prefabs/AnimationPrefabs/PurpleBallExplosionPosition/PurpleBallExplosionPosition");
+			BallExplosion anim=	(BallExplosion)Instantiate(purpleExplotionAnimation,new Vector3(x,y,0),Quaternion.identity);	
+			anim.transform.position = grid [x, y].transform.position;
+		}
+
+
+
+
+	}
+
+
+
+
+
+
+
+
+
+
 	
 	private static int CheckDown(int x, int y, Vector4 color){
 		
@@ -234,8 +272,7 @@ public class GameGrid : MonoBehaviour {
 				
 				
 				DestroyBallInGrid(x+i,y);
-				
-				
+	
 			}
 			for (int i = 0; i < MatchOnLeft; i++)
 			{
@@ -264,11 +301,13 @@ public class GameGrid : MonoBehaviour {
 			MakePopSound(downLeft+upRight+1);
 			for(int i=0;i<=upRight;i++){
 				DestroyBallInGrid(x+i,y+i);
+
 			}
 			
 			for(int i=1;i<=downLeft;i++){
 				
 				DestroyBallInGrid(x-i,y-i);
+
 			}
 		}
 		
@@ -369,9 +408,9 @@ public class GameGrid : MonoBehaviour {
 	
 	public static void DestroyBallInGrid (int x, int y)
 	{
-		
+		InstanciatExplotionAnimation(x,y);
 		Destroy(grid[x,y].gameObject);
-		
+
 		
 	}
 	public static int GetNumberOfRows(){
