@@ -27,14 +27,14 @@ public class GameGrid : MonoBehaviour {
 	
 	void Start () {
 		sequenceSound = Resources.Load<SequenceSound> ("prefabs/SoundPrefabs/sequenceSound");
-		textPoints= GameObject.Find("Points").GetComponent<Text>();
+		textPoints= GameObject.Find("PointsPanel").transform.GetChild(0).gameObject.GetComponent<Text>();
 		GameObject barInstance = GameObject.FindGameObjectWithTag ("Bars");
 		numberOfColoumns = barInstance.transform.childCount;
 		
 	}
 
 	void Update(){
-		textPoints.text= points.ToString();
+		textPoints.text= " Score: "+ points.ToString();
 		if (destroyd>0){
 			print ("pointsCoefficient " + pointsTypeOfSequanceCoefficient);
 			print("pointsNumOfSequanceCoefficient " + pointsNumOfSequanceCoefficient); 
@@ -58,13 +58,13 @@ public class GameGrid : MonoBehaviour {
 			Invoke("ActivateSequencesAnimation",0.1f);
 		}
 		if(numOfSequensesForAnimation==3){
-			Invoke("ActivateSequencesAnimation",1);
+			Invoke("ActivateSequencesAnimation",1.2f);
 		}
 		if(numOfSequensesForAnimation==4){
-			Invoke("ActivateSequencesAnimation",1.3f);
+			Invoke("ActivateSequencesAnimation",2f);
 		}
 		if(numOfSequensesForAnimation==5){
-			Invoke("ActivateSequencesAnimation",1.6f);
+			Invoke("ActivateSequencesAnimation",3f);
 		}
 		ActivatePointsAnimation ();
 		ActivatePointsSound ();

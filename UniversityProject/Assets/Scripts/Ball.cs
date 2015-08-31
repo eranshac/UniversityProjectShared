@@ -54,7 +54,7 @@ public class Ball : MonoBehaviour {
 
 				}
 				transform.position += Vector3.left * speed * Time.deltaTime;
-			}else
+			}else{
 				if(Input.GetKey(KeyCode.RightArrow)){
 					transform.position += Vector3.right * 20 * Time.deltaTime;
 				}
@@ -62,6 +62,7 @@ public class Ball : MonoBehaviour {
 					
 					transform.position += Vector3.left * 20 * Time.deltaTime;
 				}
+			}
 		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, 0 + WidthOfBar, 23.5f), transform.position.y, transform.position.z);
 		}
 
@@ -102,10 +103,7 @@ public class Ball : MonoBehaviour {
 			gameObject.GetComponent<Rigidbody2D>().gravityScale=7;
 			collision2D.gameObject.GetComponent<BoxCollider2D>().enabled=false;
 		}
-
-		if (gameObject.tag != "menuBall")
-			isCollided=true;
-
+		BallStopReactingToVoice (collision2D);
 		if (LayerMask.LayerToName (collision2D.gameObject.layer) != "Flask" && !hasMadeSuctionSound ) {
 			rigidbody2d.gravityScale = 4;
 
@@ -155,13 +153,21 @@ public class Ball : MonoBehaviour {
 				soundToDestroy.GetComponent<AudioSource>().pitch=2;
 				Destroy(soundToDestroy);
 
-
-
 			}
 		}
 
-		   
 	}
+
+	void BallStopReactingToVoice (Collision2D collision2D)
+	{
+
+		print (collision2D.gameObject.tag );
+		if (gameObject.tag != "menuBall" || collision2D.gameObject.tag=="ButtonFlask")
+			isCollided=true;
+
+
+	}
+
 	void MakeSuctionSound(float delayInSound){
 		suctionSound = Resources.Load<SuctionSoundFX> ("prefabs/SoundPrefabs/SuctionSound");
 		GameObject suctionSoundGarbage=  GameObject.FindGameObjectWithTag ("SuctionSoundGarbage") as GameObject ;
