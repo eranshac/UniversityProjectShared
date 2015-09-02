@@ -7,7 +7,7 @@ public class Ball : MonoBehaviour {
 	public Bar bar;
 	private int xPosition=9999;
 	private int yPosition=9999;
-	private bool moveBallWithVoice=true;
+	private bool moveBallWithVoice=false;
 	private LevelManager levleManager;
 	public Rigidbody2D rigidbody2d;
 	public float middlePitch=240;
@@ -16,7 +16,6 @@ public class Ball : MonoBehaviour {
 	private bool test=false;
 	private bool hasMadeSuctionSound=false;
 	private bool hasMadeHitSound=false;
-	private bool moveBallWithKeyboard=true;
 
 	SuctionSoundFX suctionSound;
 	GameObject soundToDestroy;
@@ -55,8 +54,7 @@ public class Ball : MonoBehaviour {
 
 				}
 				transform.position += Vector3.left * speed * Time.deltaTime;
-			}
-			if(moveBallWithKeyboard){
+			}else{
 				if(Input.GetKey(KeyCode.RightArrow)){
 					transform.position += Vector3.right * 20 * Time.deltaTime;
 				}
@@ -118,8 +116,6 @@ public class Ball : MonoBehaviour {
 
 			}
 		}
-
-
 		
 		
 		if ((collision2D.gameObject.tag == "Floor" || collision2D.gameObject.tag == "Ball")) {
@@ -146,7 +142,6 @@ public class Ball : MonoBehaviour {
 				
 			}
 
-
 			
 		}
 		if (collision2D.gameObject.tag == "Ball" || collision2D.gameObject.tag == "Floor") {
@@ -161,23 +156,12 @@ public class Ball : MonoBehaviour {
 			}
 		}
 
-
-		if( collision2D.gameObject.tag=="VoiceOff"){
-	
-			moveBallWithVoice=false;
-			moveBallWithKeyboard=false;
-			
-		}
-		if( collision2D.gameObject.tag=="VoiceOn"){
-			moveBallWithVoice=true;
-			moveBallWithKeyboard=true;
-			
-		}
 	}
 
 	void BallStopReactingToVoice (Collision2D collision2D)
 	{
 
+		print (collision2D.gameObject.tag );
 		if (gameObject.tag != "menuBall" || collision2D.gameObject.tag=="ButtonFlask")
 			isCollided=true;
 
