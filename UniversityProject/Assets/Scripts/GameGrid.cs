@@ -2,6 +2,8 @@
 using System.Collections;
 using System;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
 
 public class GameGrid : MonoBehaviour {
 	
@@ -20,6 +22,7 @@ public class GameGrid : MonoBehaviour {
 	public PointsAnimation SequenceAnim ;
 	public PointsAnimation pointsAnim;
 	private SequenceSound sequenceSound;
+	private Queue < int > queueAnimations = new Queue < int >();
 
 	int numOfSequensesForAnimation;
 	int score;
@@ -35,36 +38,47 @@ public class GameGrid : MonoBehaviour {
 
 	void Update(){
 		textPoints.text= " Score: "+ points.ToString();
-		if (destroyd>0){
+		if (destroyd > 0) {
+			print ("destroyd " + destroyd);
 			print ("pointsCoefficient " + pointsTypeOfSequanceCoefficient);
-			print("pointsNumOfSequanceCoefficient " + pointsNumOfSequanceCoefficient); 
-			int point=(destroyd-3)*pointsTypeOfSequanceCoefficient*100*((int) Mathf.Pow(2, pointsNumOfSequanceCoefficient));
-			AddPoints(point);
-			pointsNumOfSequanceCoefficient++;
-			destroyd=0;
-			CallAnimations(point,pointsNumOfSequanceCoefficient);
+			print ("pointsNumOfSequanceCoefficient " + pointsNumOfSequanceCoefficient); 
+			int point;
+			if (destroyd > 7) {
+
+				point= pointsTypeOfSequanceCoefficient * 100 * ((int)Mathf.Pow (2, pointsNumOfSequanceCoefficient));
+				destroyd=destroyd-4;
+			} else{
+				point= (destroyd - 3) * pointsTypeOfSequanceCoefficient * 100 * ((int)Mathf.Pow (2, pointsNumOfSequanceCoefficient));
+				destroyd = 0;
+		}
+				CallAnimations(point,pointsNumOfSequanceCoefficient);
+		AddPoints (point);
+		pointsNumOfSequanceCoefficient++;
+
 		}
 		
 	}
 
 	void CallAnimations (int point, int pointsNumOfSequanceCoefficient)
 	{
+		if(pointsNumOfSequanceCoefficient>0)
+		queueAnimations.Enqueue (pointsNumOfSequanceCoefficient);
 		score=point;
-		numOfSequensesForAnimation=pointsNumOfSequanceCoefficient;
-		if(numOfSequensesForAnimation==1){
-			//do nothing
-		}
-		if(numOfSequensesForAnimation==2){
+
+		if(pointsNumOfSequanceCoefficient==1){
 			Invoke("ActivateSequencesAnimation",0.1f);
 		}
-		if(numOfSequensesForAnimation==3){
+		if(pointsNumOfSequanceCoefficient==2){
 			Invoke("ActivateSequencesAnimation",1.2f);
 		}
-		if(numOfSequensesForAnimation==4){
+		if(pointsNumOfSequanceCoefficient==3){
 			Invoke("ActivateSequencesAnimation",2f);
 		}
-		if(numOfSequensesForAnimation==5){
+		if(pointsNumOfSequanceCoefficient==4){
 			Invoke("ActivateSequencesAnimation",3f);
+		}
+		if(pointsNumOfSequanceCoefficient==5){
+			Invoke("ActivateSequencesAnimation",4f);
 		}
 		ActivatePointsAnimation ();
 		ActivatePointsSound ();
@@ -72,22 +86,25 @@ public class GameGrid : MonoBehaviour {
 	
 	void ActivateSequencesAnimation ()
 	{
+
+		numOfSequensesForAnimation = queueAnimations.Dequeue ();
+		print ("numOfSequensesForAnimation " + numOfSequensesForAnimation);
 		if (numOfSequensesForAnimation != 0) {
 			PointsAnimation sequencesAnimation = Resources.Load<PointsAnimation> ("prefabs/AnimationPrefabs/SequencesAnimation");
 			string textToDisplay="TextNotInitialized";
 			if(numOfSequensesForAnimation==1){
-				return;
-			}
-			if(numOfSequensesForAnimation==2){
 				textToDisplay="Double Explosion!";
 			}
-			if(numOfSequensesForAnimation==3){
+			if(numOfSequensesForAnimation==2){
 				textToDisplay="Triple Explosion!";
+			}
+			if(numOfSequensesForAnimation==3){
+				textToDisplay="Quadruple Explosion!";
 
 
 			}
 			if(numOfSequensesForAnimation==4){
-				textToDisplay="Quadruple Explosion!";
+				textToDisplay="Penta Explosion!";
 
 			}
 			sequencesAnimation.PointsTextController.text = textToDisplay ;
@@ -105,7 +122,7 @@ public class GameGrid : MonoBehaviour {
 	{
 
 		PointsAnimation pointsAnimation=Resources.Load<PointsAnimation>("prefabs/AnimationPrefabs/PointsAnimation");
-		print(pointsAnimation);
+	
 
 		pointsAnimation.PointsTextController.text = "+"+ score.ToString ();
 
